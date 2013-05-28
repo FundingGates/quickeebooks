@@ -15,6 +15,8 @@ module Quickeebooks
 
     module Service
       class ServiceBase
+        include Quickeebooks::Logging
+
         attr_accessor :realm_id
         attr_accessor :oauth
         attr_accessor :base_uri
@@ -36,11 +38,11 @@ module Quickeebooks
         def access_token=(token)
           @oauth = token
         end
-        
+
         def realm_id=(realm_id)
           @realm_id = realm_id
         end
-        
+
         # uri is of the form `https://qbo.intuit.com/qbo36`
         def base_url=(uri)
           @base_uri = uri
@@ -68,7 +70,7 @@ module Quickeebooks
         end
 
         private
-        
+
         def parse_xml(xml)
           Nokogiri::XML(xml)
         end
@@ -79,7 +81,7 @@ module Quickeebooks
 
         def fetch_collection(model, filters = [], page = 1, per_page = 20, sort = nil, options ={})
           raise ArgumentError, "missing model to instantiate" if model.nil?
-          
+
           post_body_lines = []
 
           if filters.is_a?(Array) && filters.length > 0
@@ -134,11 +136,10 @@ module Quickeebooks
             headers.merge!({'Content-Type' => 'application/xml'})
           end
 
-          log "Request Method: #{method}"
-          log "Request URL: #{resource}"
-          log "Request Headers: #{headers.inspect}"
-          log "Request Body"
-          log "#{body ? body.inspect : "(nothing)"}"
+          logger.debug "Request Method: #{method}"
+          logger.debug "Request URL: #{resource}"
+          logger.debug "Request Headers: #{headers.inspect}"
+          logger.debug "Request Body: #{body || "(nothing)"}"
 
           response = @oauth.request(method, resource, body, headers)
           check_response(response)
@@ -153,9 +154,9 @@ module Quickeebooks
         end
 
         def check_response(response)
-          log "Response Code: #{response.code}"
-          log "Response Body"
-          log response.body
+          logger.debug "Response Code: #{response.code.inspect}"
+          logger.debug "Response Body: #{response.body.gsub("\r", "\n")}"
+
           status = response.code.to_i
           case status
           when 200
@@ -192,10 +193,6 @@ module Quickeebooks
           end
 
           error
-        end
-
-        def log(msg)
-          Quickeebooks.logger.info "[#{self.class}] #{msg}"
         end
       end
     end

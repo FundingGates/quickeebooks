@@ -6,20 +6,9 @@ require 'active_model'
 class InvalidModelException < Exception; end
 
 module Quickeebooks
-  @@logger = nil
-
-  def self.logger
-    @@logger || Logger.new($stdout) # TODO: replace with a real log file
-  end
-
-  def self.logger=(logger)
-    @@logger = logger
-  end
-
   class Collection
     attr_accessor :entries, :count, :current_page
   end
-
 end
 
 # monkey-path the to_xml method to add support for passing
@@ -50,6 +39,10 @@ module ROXML
     end
   end
 end
+
+#== Base files
+
+require 'quickeebooks/logging'
 
 #== Shared
 
