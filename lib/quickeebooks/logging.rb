@@ -35,6 +35,8 @@ module Quickeebooks
     end
   end
 
+  extend Logging::ClassMethods
+
   class << self
     attr_accessor :log_to
     attr_accessor :log_formatter_class
