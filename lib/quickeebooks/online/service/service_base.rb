@@ -179,15 +179,21 @@ module Quickeebooks
         def parse_intuit_error(body)
           xml = parse_xml(body)
           error = {:message => "", :code => 0, :cause => ""}
-          fault = xml.xpath("//xmlns:FaultInfo/xmlns:Message")[0]
+
+          if xml.at_xpath('html')
+            fault = xml.at_xpath("//h1")
+          else
+            fault = xml.at_xpath("//xmlns:FaultInfo/xmlns:Message")
+            error_code = xml.at_xpath("//xmlns:FaultInfo/xmlns:ErrorCode")
+            error_cause = xml.at_xpath("//xmlns:FaultInfo/xmlns:Cause")
+          end
+
           if fault
             error[:message] = fault.text
           end
-          error_code = xml.xpath("//xmlns:FaultInfo/xmlns:ErrorCode")[0]
           if error_code
             error[:code] = error_code.text
           end
-          error_cause = xml.xpath("//xmlns:FaultInfo/xmlns:Cause")[0]
           if error_cause
             error[:cause] = error_cause.text
           end

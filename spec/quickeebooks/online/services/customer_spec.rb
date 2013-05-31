@@ -30,6 +30,14 @@ describe "Quickeebooks::Online::Service::Customer" do
     accounts.entries.first.name.should == "John Doe"
   end
 
+  it "handles 400 errors which are in the form of HTML when making a list request" do
+    xml = onlineFixture("no_destination_found.html")
+    url = @service.url_for_resource(Quickeebooks::Online::Model::Customer.resource_for_collection)
+    FakeWeb.register_uri(:post, url, :status => ["400", "Bad Request"], :body => xml)
+    lambda { @service.list }.should \
+      raise_error(IntuitRequestException, "HTTP Status 400 - message=No destination found for given partition key; errorCode=007001; statusCode=400")
+  end
+
   it "can fetch a list of customers with filters" do
     xml = onlineFixture("customers.xml")
     url = @service.url_for_resource(Quickeebooks::Online::Model::Customer.resource_for_collection)
