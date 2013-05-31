@@ -37,6 +37,14 @@ describe "Quickeebooks::Online::Service::Account" do
     accounts.entries.first.current_balance.should == 6200
   end
 
+  it "handles 400 errors which are in the form of HTML when making a list request" do
+    xml = onlineFixture("no_destination_found.html")
+    url = @service.url_for_resource(Quickeebooks::Online::Model::Account.resource_for_collection)
+    FakeWeb.register_uri(:post, url, :status => ["400", "Bad Request"], :body => xml)
+    lambda { @service.list }.should \
+      raise_error(IntuitRequestException, "HTTP Status 400 - message=No destination found for given partition key; errorCode=007001; statusCode=400")
+  end
+
   it "can create an account" do
     xml = File.read(File.dirname(__FILE__) + "/../../../xml/online/account.xml")
     url = @service.url_for_resource(Quickeebooks::Online::Model::Account.resource_for_singular)
