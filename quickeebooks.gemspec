@@ -14,11 +14,12 @@ Gem::Specification.new do |gem|
 
   gem.files = Dir["**/*"]
 
-  gem.add_dependency 'roxml'
-  gem.add_dependency 'oauth'
-  gem.add_dependency 'nokogiri'
-  gem.add_dependency 'activemodel'
-  gem.add_dependency 'uuidtools'
+  gem.add_dependency 'roxml', '~> 3.3.1'
+  gem.add_dependency 'oauth', '~> 0.4.7'
+  gem.add_dependency 'nokogiri', '~> 1.5.9'
+  gem.add_dependency 'activemodel', '~> 3.2.13'
+  gem.add_dependency 'uuidtools', '~> 2.1.4'
+  gem.add_dependency 'json', '~> 1.7.7'
 
   gem.add_development_dependency 'rake'
   gem.add_development_dependency 'simplecov'
