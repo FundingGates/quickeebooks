@@ -6,7 +6,10 @@ module Quickeebooks
       def logger
         @logger || Quickeebooks.logger
       end
-      attr_writer :logger
+
+      def logger=(logger)
+        @logger = logger
+      end
     end
 
     def self.included(base)

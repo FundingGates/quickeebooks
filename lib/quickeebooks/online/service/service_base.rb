@@ -136,6 +136,9 @@ module Quickeebooks
             headers.merge!({'Content-Type' => 'application/xml'})
           end
 
+          p "THIS IS LOGGING"
+          p logger
+
           logger.debug "Request Method: #{method}"
           logger.debug "Request URL: #{resource}"
           logger.debug "Request Headers: #{headers.inspect}"
