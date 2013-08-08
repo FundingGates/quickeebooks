@@ -1,6 +1,7 @@
-describe "Quickeebooks::Online::Model::Invoice" do
+require 'spec_helper'
 
-  describe "parse invoice from XML" do
+describe "Quickeebooks::Online::Model::Invoice" do
+  it "can parse invoice from XML" do
     xml = onlineFixture("invoice.xml")
     invoice = Quickeebooks::Online::Model::Invoice.from_xml(xml)
     invoice.header.balance.should == 0
@@ -8,5 +9,4 @@ describe "Quickeebooks::Online::Model::Invoice" do
     invoice.line_items.count.should == 1
     invoice.line_items.first.unit_price.should == 225
   end
-
 end
