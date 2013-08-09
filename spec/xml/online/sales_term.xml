@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<SalesTerm xmlns="http://www.intuit.com/sb/cdm/v2" xmlns:qbp="http://www.intuit.com/sb/cdm/qbopayroll/v1" xmlns:qbo="http://www.intuit.com/sb/cdm/qbo">
+  <Id idDomain="QBO">3</Id>
+  <SyncToken>0</SyncToken>
+  <MetaData>
+    <CreateTime>2013-01-17T19:04:19-08:00</CreateTime>
+    <LastUpdatedTime>2013-01-17T19:04:19-08:00</LastUpdatedTime>
+  </MetaData>
+  <Name>Net 30</Name>
+  <DueDays>30</DueDays>
+  <DiscountDays>0</DiscountDays>
+</SalesTerm>
