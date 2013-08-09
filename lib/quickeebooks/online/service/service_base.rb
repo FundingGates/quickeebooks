@@ -98,6 +98,11 @@ module Quickeebooks
 
           body = post_body_lines.join("&")
           response = do_http_post(url_for_resource(model.resource_for_collection), body, {}, {'Content-Type' => 'application/x-www-form-urlencoded'})
+
+          parse_collection(response, model)
+        end
+
+        def parse_collection(response, model)
           if response
             collection = Quickeebooks::Collection.new
             xml = parse_xml(response.body)
