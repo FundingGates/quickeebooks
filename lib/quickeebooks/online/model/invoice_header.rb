@@ -15,6 +15,7 @@ module Quickeebooks
         xml_accessor :customer_name, :from => 'CustomerName'
         xml_accessor :sales_tax_code_id, :from => 'SalesTaxCodeId', :as => Quickeebooks::Online::Model::Id
         xml_accessor :sales_tax_code_name, :from => 'SalesTaxCodeName'
+        xml_accessor :sales_term_id, :from => 'SalesTermId', :as => Quickeebooks::Online::Model::Id
         xml_accessor :sub_total_amount, :from => 'SubTotalAmt', :as => Float
         xml_accessor :tax_rate, :from => 'TaxRate', :as => Float
         xml_accessor :tax_amount, :from => 'TaxAmt', :as => Float
