@@ -79,6 +79,17 @@ module Quickeebooks
           %Q{<?xml version="1.0" encoding="utf-8"?>\n#{xml.strip}}
         end
 
+        def fetch_object(model, url, params = {}, options = {})
+          raise ArgumentError, "missing model to instantiate" if model.nil?
+          response = do_http_get(url, params, {'Content-Type' => 'text/xml'})
+
+          xml = parse_xml(response.body)
+          element = xml.at_xpath("//xmlns:#{model::XML_NODE}")
+          model.from_xml(element)
+        rescue => ex
+          raise IntuitRequestException.new("Error parsing XML: #{ex.message}")
+        end
+
         def fetch_collection(model, filters = [], page = 1, per_page = 20, sort = nil, options ={})
           raise ArgumentError, "missing model to instantiate" if model.nil?
 
