@@ -85,12 +85,21 @@ describe "Quickeebooks::Online::Service::Customer" do
     lambda { @service.update(customer) }.should raise_error(InvalidModelException)
   end
 
-  it "can fetch a customer by id" do
-    xml = onlineFixture("customer.xml")
-    url = "#{@service.url_for_resource(Quickeebooks::Online::Model::Customer.resource_for_singular)}/99"
-    FakeWeb.register_uri(:get, url, :status => ["200", "OK"], :body => xml)
-    customer = @service.fetch_by_id(99)
-    customer.name.should == "John Doe"
+  describe '#fetch_by_id' do
+    it "returns the customer if it can be found" do
+      xml = onlineFixture("customer.xml")
+      url = "#{@service.url_for_resource(Quickeebooks::Online::Model::Customer.resource_for_singular)}/99"
+      FakeWeb.register_uri(:get, url, :status => ["200", "OK"], :body => xml)
+      customer = @service.fetch_by_id(99)
+      customer.name.should == "John Doe"
+    end
+
+    it "returns nil if the customer cannot be found" do
+      xml = onlineFixture("customer_not_found.xml")
+      url = "#{@service.url_for_resource(Quickeebooks::Online::Model::Customer.resource_for_singular)}/99"
+      FakeWeb.register_uri(:get, url, :status => ["400", "Bad Request"], :body => xml)
+      @service.fetch_by_id(99).should eq nil
+    end
   end
 
   it "can update a customer" do

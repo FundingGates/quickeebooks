@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<FaultInfo xmlns="http://www.intuit.com/sb/cdm/baseexceptionmodel/xsd">
+  <Message>Customer not found</Message>
+  <ErrorCode>CUSTOMER_REQUEST_BAD</ErrorCode>
+  <Cause>CUSTOMER_NOT_FOUND</Cause>
+</FaultInfo>

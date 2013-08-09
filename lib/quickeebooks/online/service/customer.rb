@@ -20,10 +20,12 @@ module Quickeebooks
         def fetch_by_id(id)
           url = "#{url_for_resource(Quickeebooks::Online::Model::Customer.resource_for_singular)}/#{id}"
           response = do_http_get(url)
-          if response && response.code.to_i == 200
-            Quickeebooks::Online::Model::Customer.from_xml(response.body)
-          else
+          Quickeebooks::Online::Model::Customer.from_xml(response.body)
+        rescue IntuitRequestException => e
+          if e.message == 'Customer not found'
             nil
+          else
+            raise e
           end
         end
 
