@@ -192,4 +192,37 @@ describe "Quickeebooks::Shared::Service::Filter" do
     end
   end
 
+  context 'set of filters' do
+    describe '#to_s' do
+      it "raises an error" do
+        filter_instance = filter.new(:filter_set,
+          :field => 'Foo',
+          :value => filter.new(:integer,
+            :field => 'Bar',
+            :value => 42
+          )
+        )
+        expect { filter_instance.to_s }.to raise_error(ArgumentError)
+      end
+    end
+
+    describe '#to_xml' do
+      it 'returns an XML representation of the filter' do
+        filter_instance = filter.new(:filter_set,
+          :field => 'Foo',
+          :value => [
+            filter.new(:text,
+              :field => 'Bar',
+              :value => 42
+            ),
+            filter.new(:datetime,
+              :field => 'Baz',
+              :value => Time.new(2012, 1, 2, 3, 4, 5)
+            ),
+          ]
+        )
+        filter_instance.to_xml.should eq '<Foo><Bar>42</Bar><Baz>2012-01-02T03:04:05.0Z</Baz></Foo>'
+      end
+    end
+  end
 end

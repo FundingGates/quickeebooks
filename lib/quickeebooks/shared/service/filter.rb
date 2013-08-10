@@ -50,6 +50,8 @@ module Quickeebooks
             text_to_xml
           when :boolean
             boolean_to_xml
+          when :filter_set
+            filter_set_to_xml
           else
             raise ArgumentError, "Don't know how to generate a Filter for type #{@type}"
           end
@@ -117,6 +119,20 @@ module Quickeebooks
           value = @escape ? CGI::escapeHTML(@value.to_s) : @value
 
           "<#{@field}>#{value}</#{@field}>"
+        end
+
+        def filter_set_to_xml
+          unless @value.is_a?(Array) and @value.all? {|item| item.is_a?(self.class) }
+            raise ArgumentError, "Given :value must be an array of Filters"
+          end
+
+          xml = "<#{@field}>"
+          @value.each do |filter|
+            xml << filter.to_xml
+          end
+          xml << "</#{@field}>"
+
+          xml
         end
 
         def xml_formatted_date(time)
