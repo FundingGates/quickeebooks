@@ -189,6 +189,13 @@ describe "Quickeebooks::Shared::Service::Filter" do
     end
 
     describe '#to_xml' do
+      it "converts the number to XML" do
+        filter_instance = filter.new(:number,
+          :field => 'Foo',
+          :value => 42
+        )
+        filter_instance.to_xml.should eq '<Foo>42</Foo>'
+      end
     end
   end
 

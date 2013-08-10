@@ -46,7 +46,7 @@ module Quickeebooks
             date_to_xml
           when :datetime
             date_time_to_xml
-          when :text
+          when :text, :number
             text_to_xml
           when :boolean
             boolean_to_xml
