@@ -1,95 +1,105 @@
-describe "Quickeebooks::Windows::Service::ServiceBase" do
-  before(:all) do
+describe Quickeebooks::Windows::Service::ServiceBase do
+  before :each do
     FakeWeb.allow_net_connect = false
-    qb_key = "key"
-    qb_secret = "secreet"
-
-    @realm_id = "9991111222"
-    @oauth_consumer = OAuth::Consumer.new(qb_key, qb_key, {
-        :site                 => "https://oauth.intuit.com",
-        :request_token_path   => "/oauth/v1/get_request_token",
-        :authorize_path       => "/oauth/v1/get_access_token",
-        :access_token_path    => "/oauth/v1/get_access_token"
-    })
-    @oauth = OAuth::AccessToken.new(@oauth_consumer, "blah", "blah")
-
-    @service = Quickeebooks::Windows::Service::ServiceBase.new
-    @service.access_token = @oauth
-    @service.instance_eval {
-      @realm_id = "9991111222"
-    }
+  end
+  after :each do
+    FakeWeb.allow_net_connect = true
   end
 
-  describe "#fetch_collection" do
-    let(:default_params){ "<StartPage>1</StartPage><ChunkSize>20</ChunkSize>" }
+  it_behaves_like 'Quickeebooks::Shared::Service::ServiceBase'
 
-    before do
-      stub_const("Object::REST_RESOURCE", "foos")
-      stub_const("Object::XML_NODE",      "Foo")
+  context '' do
+    before(:all) do
+      qb_key = "key"
+      qb_secret = "secreet"
 
-      @url = @service.url_for_resource(Object::REST_RESOURCE)
+      @realm_id = "9991111222"
+      @oauth_consumer = OAuth::Consumer.new(qb_key, qb_key, {
+          :site                 => "https://oauth.intuit.com",
+          :request_token_path   => "/oauth/v1/get_request_token",
+          :authorize_path       => "/oauth/v1/get_access_token",
+          :access_token_path    => "/oauth/v1/get_access_token"
+      })
+      @oauth = OAuth::AccessToken.new(@oauth_consumer, "blah", "blah")
+
+      @service = Quickeebooks::Windows::Service::ServiceBase.new
+      @service.access_token = @oauth
+      @service.instance_eval {
+        @realm_id = "9991111222"
+      }
     end
 
-    def wrap_result(res)
-      %Q{<?xml version="1.0" encoding="utf-8"?>\n<FooQuery xmlns="http://www.intuit.com/sb/cdm/v2">#{res}</FooQuery>}
-    end
+    describe "#fetch_collection" do
+      let(:default_params){ "<StartPage>1</StartPage><ChunkSize>20</ChunkSize>" }
 
-    it "uses all default values" do
-      @service.should_receive(:do_http_post).with(@url,
-        wrap_result(default_params),
-        {},
-        {"Content-Type"=>"text/xml"})
+      before do
+        stub_const("Object::REST_RESOURCE", "foos")
+        stub_const("Object::XML_NODE",      "Foo")
 
-      @service.send(:fetch_collection, Object)
-    end
+        @url = @service.url_for_resource(Object::REST_RESOURCE)
+      end
 
-    it "queries arbitrary things" do
-      @service.should_receive(:do_http_post).with(@url,
-        wrap_result("#{default_params}<Something>42</Something>"),
-        {},
-        {"Content-Type"=>"text/xml"})
+      def wrap_result(res)
+        %Q{<?xml version="1.0" encoding="utf-8"?>\n<FooQuery xmlns="http://www.intuit.com/sb/cdm/v2">#{res}</FooQuery>}
+      end
 
-      @service.send(:fetch_collection, Object, "<Something>42</Something>")
-    end
+      it "uses all default values" do
+        @service.should_receive(:do_http_post).with(@url,
+          wrap_result(default_params),
+          {},
+          {"Content-Type"=>"text/xml"})
 
-    it "filters" do
-      filter = Quickeebooks::Windows::Service::Filter.new(:boolean, :field => "IsPaid", :value => "true")
+        @service.send(:fetch_collection, Object)
+      end
 
-      @service.should_receive(:do_http_post).with(@url,
-        wrap_result("#{default_params}<IsPaid>true</IsPaid>"),
-        {},
-        {"Content-Type"=>"text/xml"})
+      it "queries arbitrary things" do
+        @service.should_receive(:do_http_post).with(@url,
+          wrap_result("#{default_params}<Something>42</Something>"),
+          {},
+          {"Content-Type"=>"text/xml"})
 
-      @service.send(:fetch_collection, Object, nil, [filter])
-    end
+        @service.send(:fetch_collection, Object, "<Something>42</Something>")
+      end
 
-    it "paginates" do
-      @service.should_receive(:do_http_post).with(@url,
-        wrap_result("<StartPage>2</StartPage><ChunkSize>20</ChunkSize>"),
-        {},
-        {"Content-Type"=>"text/xml"})
+      it "filters" do
+        filter = Quickeebooks::Windows::Service::Filter.new(:boolean, :field => "IsPaid", :value => "true")
 
-      @service.send(:fetch_collection, Object, nil, nil, 2)
-    end
+        @service.should_receive(:do_http_post).with(@url,
+          wrap_result("#{default_params}<IsPaid>true</IsPaid>"),
+          {},
+          {"Content-Type"=>"text/xml"})
 
-    it "changes per_page" do
-      @service.should_receive(:do_http_post).with(@url,
-        wrap_result("<StartPage>1</StartPage><ChunkSize>10</ChunkSize>"),
-        {},
-        {"Content-Type"=>"text/xml"})
+        @service.send(:fetch_collection, Object, nil, [filter])
+      end
 
-      @service.send(:fetch_collection, Object, nil, nil, 1, 10)
-    end
+      it "paginates" do
+        @service.should_receive(:do_http_post).with(@url,
+          wrap_result("<StartPage>2</StartPage><ChunkSize>20</ChunkSize>"),
+          {},
+          {"Content-Type"=>"text/xml"})
 
-    it "sorts" do
-      sorter = Quickeebooks::Windows::Service::Sort.new('FamilyName', 'Ascending')
+        @service.send(:fetch_collection, Object, nil, nil, 2)
+      end
 
-      @service.should_receive(:do_http_post).with(@url,
-        wrap_result("#{default_params}<SortByColumn sortOrder=\"Ascending\">FamilyName</SortByColumn>"),
-        {},
-        {"Content-Type"=>"text/xml"})
+      it "changes per_page" do
+        @service.should_receive(:do_http_post).with(@url,
+          wrap_result("<StartPage>1</StartPage><ChunkSize>10</ChunkSize>"),
+          {},
+          {"Content-Type"=>"text/xml"})
 
-      @service.send(:fetch_collection, Object, nil, nil, 1, 20, sorter)
+        @service.send(:fetch_collection, Object, nil, nil, 1, 10)
+      end
+
+      it "sorts" do
+        sorter = Quickeebooks::Windows::Service::Sort.new('FamilyName', 'Ascending')
+
+        @service.should_receive(:do_http_post).with(@url,
+          wrap_result("#{default_params}<SortByColumn sortOrder=\"Ascending\">FamilyName</SortByColumn>"),
+          {},
+          {"Content-Type"=>"text/xml"})
+
+        @service.send(:fetch_collection, Object, nil, nil, 1, 20, sorter)
+      end
     end
   end
 end

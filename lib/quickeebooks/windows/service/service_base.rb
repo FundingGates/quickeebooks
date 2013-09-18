@@ -15,7 +15,7 @@ module Quickeebooks
   module Windows
     module Service
       class ServiceBase
-        include Quickeebooks::Logging
+        include Shared::Service::ServiceBase
 
         attr_accessor :realm_id
         attr_accessor :oauth
@@ -169,20 +169,6 @@ module Quickeebooks
           do_http(:get, url, "", headers)
         end
 
-        def do_http(method, url, body, headers) # throws IntuitRequestException
-          unless headers.has_key?('Content-Type')
-            headers.merge!({'Content-Type' => 'application/xml'})
-          end
-
-          logger.debug "Request Method: #{method}"
-          logger.debug "Request URL: #{url}"
-          logger.debug "Request Headers: #{headers.inspect}"
-          logger.debug "Request Body: #{body || "(nothing)"}"
-
-          response = @oauth.request(method, url, body, headers)
-          check_response(response)
-        end
-
         def add_query_string_to_url(url, params)
           if params.is_a?(Hash) && !params.empty?
             url + "?" + params.collect { |k| "#{k.first}=#{k.last}" }.join("&")
@@ -192,9 +178,6 @@ module Quickeebooks
         end
 
         def check_response(response)
-          logger.debug "Response Code: #{response.code.inspect}"
-          logger.debug "Response Body: #{response.body.gsub("\r", "\n")}"
-
           parse_xml(response.body)
           status = response.code.to_i
           case status

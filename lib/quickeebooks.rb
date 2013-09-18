@@ -42,7 +42,7 @@ end
 
 #== Base files
 
-require 'quickeebooks/logging'
+require 'quickeebooks/request'
 
 #== Shared
 
@@ -50,6 +50,7 @@ require 'quickeebooks/logging'
 require 'quickeebooks/shared/service/filter'
 require 'quickeebooks/shared/service/access_token'
 require 'quickeebooks/shared/service/sort'
+require 'quickeebooks/shared/service/service_base'
 
 #== Online
 
