@@ -1,5 +1,5 @@
 # encoding: utf-8
-unless ENV['CI']
+if ENV['COVERAGE']
   require 'simplecov'
   SimpleCov.start do
     add_filter 'spec'
