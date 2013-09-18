@@ -226,6 +226,10 @@ module Quickeebooks
 
         def response_is_error?
           @last_response_xml.xpath("//xmlns:RestResponse/xmlns:Error").first != nil
+        rescue Nokogiri::XML::XPath::SyntaxError => e
+          unless e.message =~ /Undefined namespace prefix/
+            raise e
+          end
         end
 
         def parse_intuit_error
