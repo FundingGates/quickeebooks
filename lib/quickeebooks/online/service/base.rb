@@ -6,30 +6,8 @@ module Quickeebooks
   module Online
     module Service
       class Base < Quickeebooks::Shared::Service::Base
-        attr_accessor :realm_id
-        attr_accessor :oauth
-        attr_accessor :base_uri
-
-        QB_BASE_URI = "https://qbo.sbfinance.intuit.com"
-        XML_NS = %{xmlns:ns2="http://www.intuit.com/sb/cdm/qbo" xmlns="http://www.intuit.com/sb/cdm/v2" xmlns:ns3="http://www.intuit.com/sb/cdm"}
-
-        def initialize(oauth_access_token = nil, realm_id = nil)
-          if !oauth_access_token.nil? && !realm_id.nil?
-            msg = "Quickeebooks::Online::ServiceBase - "
-            msg += "This version of the constructor is deprecated. "
-            msg += "Use the no-arg constructor and set the AccessToken (access_token=) and the RealmID (realm_id=) using the setters."
-            warn(msg)
-            access_token = oauth_access_token
-            realm_id = realm_id
-          end
-        end
-
-        def access_token=(token)
-          @oauth = token
-        end
-
-        def realm_id=(realm_id)
-          @realm_id = realm_id
+        def self.base_url
+          'https://qbo.sbfinance.intuit.com'
         end
 
         # uri is of the form `https://qbo.intuit.com/qbo36`
@@ -39,10 +17,6 @@ module Quickeebooks
 
         def url_for_resource(resource)
           url_for_base("resource/#{resource}")
-        end
-
-        def url_for_base(raw)
-          "#{QB_BASE_URI}/#{raw}/v2/#{@realm_id}"
         end
 
         # gives us the qbo user's LoginName
@@ -62,10 +36,6 @@ module Quickeebooks
 
         def parse_xml(xml)
           Nokogiri::XML(xml)
-        end
-
-        def valid_xml_document(xml)
-          %Q{<?xml version="1.0" encoding="utf-8"?>\n#{xml.strip}}
         end
 
         def fetch_object(model, url, params = {}, options = {})
@@ -123,24 +93,6 @@ module Quickeebooks
             collection
           else
             nil
-          end
-        end
-
-        def do_http_post(url, body = "", params = {}, headers = {}) # throws IntuitRequestException
-          url = add_query_string_to_url(url, params)
-          do_http(:post, url, body, headers)
-        end
-
-        def do_http_get(url, params = {}, headers = {}) # throws IntuitRequestException
-          url = add_query_string_to_url(url, params)
-          do_http(:get, url, "", headers)
-        end
-
-        def add_query_string_to_url(url, params)
-          if params.is_a?(Hash) && !params.empty?
-            url + "?" + params.collect { |k| "#{k.first}=#{k.last}" }.join("&")
-          else
-            url
           end
         end
 

@@ -23,7 +23,7 @@ describe Quickeebooks::Online::Service::Base do
       @oauth = OAuth::AccessToken.new(@oauth_consumer, "blah", "blah")
 
       xml = onlineFixture("user.xml")
-      user_url = Quickeebooks::Online::Service::Base::QB_BASE_URI + "/" + @realm_id
+      user_url = Quickeebooks::Online::Service::Base.base_url + "/" + @realm_id
       FakeWeb.register_uri(:get, user_url, :status => ["200", "OK"], :body => xml)
       @service = Quickeebooks::Online::Service::Base.new
       @service.access_token = @oauth
