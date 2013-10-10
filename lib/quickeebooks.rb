@@ -42,6 +42,7 @@ end
 
 #== Base files
 
+require 'quickeebooks/errors'
 require 'quickeebooks/request'
 
 #== Shared

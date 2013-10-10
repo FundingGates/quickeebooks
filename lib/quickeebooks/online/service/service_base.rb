@@ -2,14 +2,6 @@ require 'rexml/document'
 require 'uri'
 require 'cgi'
 
-class IntuitRequestException < Exception
-  attr_accessor :code, :cause
-  def initialize(msg)
-    super(msg)
-  end
-end
-class AuthorizationFailure < Exception; end
-
 module Quickeebooks
   module Online
     module Service
