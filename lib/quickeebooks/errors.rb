@@ -3,3 +3,5 @@ class IntuitRequestException < Exception
 end
 
 class AuthorizationFailure < Exception; end
+
+class InvalidModelException < Exception; end
