@@ -6,7 +6,7 @@ describe Quickeebooks::Online::Service::ServiceBase do
     FakeWeb.allow_net_connect = true
   end
 
-  it_behaves_like 'Quickeebooks::Shared::Service::ServiceBase'
+  it_behaves_like 'Quickeebooks::Shared::Service::Base'
 
   context '' do
     before(:all) do

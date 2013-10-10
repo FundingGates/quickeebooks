@@ -14,9 +14,7 @@ class AuthorizationFailure < Exception; end
 module Quickeebooks
   module Windows
     module Service
-      class ServiceBase
-        include Shared::Service::ServiceBase
-
+      class ServiceBase < Quickeebooks::Shared::Service::Base
         attr_accessor :realm_id
         attr_accessor :oauth
         attr_reader :base_uri
@@ -227,7 +225,6 @@ module Quickeebooks
           end
           error
         end
-
       end
     end
   end

@@ -1,7 +1,7 @@
 module Quickeebooks
   module Shared
     module Service
-      module ServiceBase
+      class Base
         def on_request(&block)
           @on_request = block
         end
@@ -38,4 +38,3 @@ module Quickeebooks
     end
   end
 end
-

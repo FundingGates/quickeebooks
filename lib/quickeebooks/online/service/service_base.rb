@@ -13,9 +13,7 @@ class AuthorizationFailure < Exception; end
 module Quickeebooks
   module Online
     module Service
-      class ServiceBase
-        include Shared::Service::ServiceBase
-
+      class ServiceBase < Quickeebooks::Shared::Service::Base
         attr_accessor :realm_id
         attr_accessor :oauth
         attr_accessor :base_uri

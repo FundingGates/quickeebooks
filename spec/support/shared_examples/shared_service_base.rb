@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-shared_examples_for 'Quickeebooks::Shared::Service::ServiceBase' do
+shared_examples_for 'Quickeebooks::Shared::Service::Base' do
   context 'logging' do
     it "occurs for each request" do
       base_uri = 'http://oauth.example.com'

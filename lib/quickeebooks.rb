@@ -50,7 +50,7 @@ require 'quickeebooks/request'
 require 'quickeebooks/shared/service/filter'
 require 'quickeebooks/shared/service/access_token'
 require 'quickeebooks/shared/service/sort'
-require 'quickeebooks/shared/service/service_base'
+require 'quickeebooks/shared/service/base'
 
 #== Online
 
