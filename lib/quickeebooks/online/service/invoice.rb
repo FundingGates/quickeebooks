@@ -1,4 +1,4 @@
-require 'quickeebooks/online/service/service_base'
+require 'quickeebooks/online/service/base'
 require 'quickeebooks/online/model/invoice'
 require 'quickeebooks/online/model/invoice_header'
 require 'quickeebooks/online/model/invoice_line_item'
@@ -7,8 +7,7 @@ require 'tempfile'
 module Quickeebooks
   module Online
     module Service
-      class Invoice < ServiceBase
-
+      class Invoice < Base
         def create(invoice)
           raise InvalidModelException unless invoice.valid?
           xml = invoice.to_xml_ns
@@ -38,7 +37,7 @@ module Quickeebooks
             nil
           end
         end
-        
+
         # Fetch a +Collection+ of +Invoice+ objects
         # Arguments:
         # filters: Array of +Filter+ objects to apply
@@ -72,7 +71,6 @@ module Quickeebooks
           response = do_http_post(url, xml, {:methodx => "delete"})
           response.code.to_i == 200
         end
-
       end
     end
   end

@@ -6,7 +6,7 @@ require 'uuidtools'
 module Quickeebooks
   module Windows
     module Service
-      class ServiceBase < Quickeebooks::Shared::Service::Base
+      class Base < Quickeebooks::Shared::Service::Base
         attr_accessor :realm_id
         attr_accessor :oauth
         attr_reader :base_uri

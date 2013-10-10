@@ -1,4 +1,4 @@
-describe Quickeebooks::Windows::Service::ServiceBase do
+describe Quickeebooks::Windows::Service::Base do
   before :each do
     FakeWeb.allow_net_connect = false
   end
@@ -22,7 +22,7 @@ describe Quickeebooks::Windows::Service::ServiceBase do
       })
       @oauth = OAuth::AccessToken.new(@oauth_consumer, "blah", "blah")
 
-      @service = Quickeebooks::Windows::Service::ServiceBase.new
+      @service = Quickeebooks::Windows::Service::Base.new
       @service.access_token = @oauth
       @service.instance_eval {
         @realm_id = "9991111222"

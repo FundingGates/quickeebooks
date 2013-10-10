@@ -1,10 +1,9 @@
-require 'quickeebooks/windows/service/service_base'
+require 'quickeebooks/windows/service/base'
 
 module Quickeebooks
   module Windows
     module Service
-      class Customer < Quickeebooks::Windows::Service::ServiceBase
-
+      class Customer < Base
         def list(filters = [], page = 1, per_page = 20, sort = nil, options = {})
           fetch_collection(Quickeebooks::Windows::Model::Customer, nil, filters, page, per_page, sort, options)
         end
@@ -64,7 +63,6 @@ module Quickeebooks
           XML
           perform_write(Quickeebooks::Windows::Model::Customer, xml)
         end
-
       end
     end
   end

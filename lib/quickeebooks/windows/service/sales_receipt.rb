@@ -1,13 +1,12 @@
 require 'quickeebooks/windows/model/sales_receipt'
 require 'quickeebooks/windows/model/sales_receipt_header'
 require 'quickeebooks/windows/model/sales_receipt_line_item'
-require 'quickeebooks/windows/service/service_base'
+require 'quickeebooks/windows/service/base'
 
 module Quickeebooks
   module Windows
     module Service
-      class SalesReceipt < Quickeebooks::Windows::Service::ServiceBase
-
+      class SalesReceipt < Base
         def list(filters = [], page = 1, per_page = 20, sort = nil, options = {})
           custom_field_query = '<?xml version="1.0" encoding="utf-8"?>'
           custom_field_query += '<SalesReceiptQuery xmlns="http://www.intuit.com/sb/cdm/v2">'
@@ -18,7 +17,7 @@ module Quickeebooks
 
         def create(sales_receipt)
           raise InvalidModelException unless sales_receipt.valid_for_create?
-          
+
           # XML is a wrapped 'object' where the type is specified as an attribute
           #    <Object xsi:type="Invoice">
           xml_node = sales_receipt.to_xml(:name => 'Object')
@@ -31,9 +30,8 @@ module Quickeebooks
           XML
           perform_write(Quickeebooks::Windows::Model::SalesReceipt, xml)
         end
-
       end
     end
-    
+
   end
 end

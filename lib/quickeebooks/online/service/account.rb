@@ -1,11 +1,10 @@
 require 'quickeebooks/online/model/account'
-require 'quickeebooks/online/service/service_base'
+require 'quickeebooks/online/service/base'
 
 module Quickeebooks
   module Online
     module Service
-      class Account < ServiceBase
-
+      class Account < Base
         def list(filters = [], page = 1, per_page = 20, sort = nil, options = {})
           fetch_collection(Quickeebooks::Online::Model::Account, filters, page, per_page, sort, options)
         end
@@ -45,7 +44,6 @@ module Quickeebooks
           response = do_http_post(url, xml, {:methodx => "delete"})
           response.code.to_i == 200
         end
-
       end
     end
   end

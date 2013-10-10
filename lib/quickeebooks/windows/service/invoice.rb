@@ -1,4 +1,4 @@
-require 'quickeebooks/windows/service/service_base'
+require 'quickeebooks/windows/service/base'
 require 'quickeebooks/windows/model/invoice'
 require 'quickeebooks/windows/model/invoice_header'
 require 'quickeebooks/windows/model/invoice_line_item'
@@ -7,9 +7,7 @@ require 'tempfile'
 module Quickeebooks
   module Windows
     module Service
-      class Invoice < Quickeebooks::Windows::Service::ServiceBase
-
-
+      class Invoice < Base
         # Fetch a +Collection+ of +Invoice+ objects
         # Arguments:
         # filters: Array of +Filter+ objects to apply
@@ -20,11 +18,11 @@ module Quickeebooks
         def list(filters = [], page = 1, per_page = 20, sort = nil, options = {})
           fetch_collection(Quickeebooks::Windows::Model::Invoice, nil, filters, page, per_page, sort, options)
         end
-        
+
         def invoice_as_pdf(invoice_id, destination_file_name)
           raise NoMethodError, 'invoice_as_pdf is not implemented in Quickeebooks for Windows, only available in the Online adapter.'
         end
-        
+
         def create(invoice)
           # XML is a wrapped 'object' where the type is specified as an attribute
           #    <Object xsi:type="Invoice">
@@ -38,7 +36,6 @@ module Quickeebooks
           XML
           perform_write(Quickeebooks::Windows::Model::Invoice, xml)
         end
-
       end
     end
   end

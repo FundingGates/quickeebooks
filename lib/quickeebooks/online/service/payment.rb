@@ -1,4 +1,4 @@
-require 'quickeebooks/online/service/service_base'
+require 'quickeebooks/online/service/base'
 require 'quickeebooks/online/model/payment'
 require 'quickeebooks/online/model/payment_header'
 require 'quickeebooks/online/model/payment_line_item'
@@ -11,8 +11,7 @@ require 'nokogiri'
 module Quickeebooks
   module Online
     module Service
-      class Payment < ServiceBase
-
+      class Payment < Base
         def create(payment)
           raise InvalidModelException unless payment.valid?
           xml = payment.to_xml_ns
@@ -49,7 +48,7 @@ module Quickeebooks
         def list(filters = [], page = 1, per_page = 20, sort = nil, options = {})
           fetch_collection(Quickeebooks::Online::Model::Payment, filters, page, per_page, sort, options)
         end
-        
+
         def delete(payment)
           raise InvalidModelException.new("Missing required parameters for delete") unless payment.valid_for_deletion?
           xml = valid_xml_document(payment.to_xml_ns(:fields => ['Id', 'SyncToken']))

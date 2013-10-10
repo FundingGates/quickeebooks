@@ -1,11 +1,10 @@
-require 'quickeebooks/online/service/service_base'
+require 'quickeebooks/online/service/base'
 require 'nokogiri'
 
 module Quickeebooks
   module Online
     module Service
-      class Customer < ServiceBase
-
+      class Customer < Base
         def create(customer)
           raise InvalidModelException unless customer.valid?
           xml = customer.to_xml_ns
@@ -52,7 +51,6 @@ module Quickeebooks
         def list(filters = [], page = 1, per_page = 20, sort = nil, options = {})
           fetch_collection(Quickeebooks::Online::Model::Customer, filters, page, per_page, sort, options)
         end
-
       end
     end
   end

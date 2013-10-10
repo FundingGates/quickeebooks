@@ -5,7 +5,7 @@ require 'cgi'
 module Quickeebooks
   module Online
     module Service
-      class ServiceBase < Quickeebooks::Shared::Service::Base
+      class Base < Quickeebooks::Shared::Service::Base
         attr_accessor :realm_id
         attr_accessor :oauth
         attr_accessor :base_uri

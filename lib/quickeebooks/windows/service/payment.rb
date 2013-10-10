@@ -1,4 +1,4 @@
-require 'quickeebooks/windows/service/service_base'
+require 'quickeebooks/windows/service/base'
 require 'quickeebooks/windows/model/payment'
 require 'quickeebooks/windows/model/payment_header'
 require 'quickeebooks/windows/model/payment_line_item'
@@ -11,7 +11,7 @@ require 'nokogiri'
 module Quickeebooks
   module Windows
     module Service
-      class Payment < ServiceBase
+      class Payment < Base
         def fetch_by_id(id, idDomain = 'QB', options = {})
           url = "#{url_for_resource(Quickeebooks::Windows::Model::Payment::REST_RESOURCE)}/#{id}"
           fetch_object(Quickeebooks::Windows::Model::Payment, url, { :idDomain => idDomain })

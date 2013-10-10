@@ -1,4 +1,4 @@
-require 'quickeebooks/online/service/service_base'
+require 'quickeebooks/online/service/base'
 require 'nokogiri'
 
 module Quickeebooks
@@ -6,8 +6,7 @@ module Quickeebooks
     module Service
       # read only, corresponds to the realm_id
       # see https://ipp.developer.intuit.com/0010_Intuit_Partner_Platform/0050_Data_Services/0400_QuickBooks_Online/CompanyMetaData
-      class CompanyMetaData < ServiceBase
-
+      class CompanyMetaData < Base
         def load
           url = url_for_resource(Quickeebooks::Online::Model::CompanyMetaData.resource_for_singular)
           response = do_http_get(url)
@@ -16,7 +15,6 @@ module Quickeebooks
           else
             nil
           end
-
         end
       end
     end

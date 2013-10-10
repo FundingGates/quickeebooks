@@ -1,11 +1,10 @@
 require 'quickeebooks/windows/model/item'
-require 'quickeebooks/windows/service/service_base'
+require 'quickeebooks/windows/service/base'
 
 module Quickeebooks
   module Windows
     module Service
-      class Item < Quickeebooks::Windows::Service::ServiceBase
-
+      class Item < Base
         def list(filters = [], page = 1, per_page = 20, sort = nil, options = {})
           custom_field_query = '<CustomFieldEnable>true</CustomFieldEnable>'
           fetch_collection(Quickeebooks::Windows::Model::Item, custom_field_query.strip, filters, page, per_page, sort, options)
@@ -24,9 +23,7 @@ module Quickeebooks
           XML
           perform_write(Quickeebooks::Windows::Model::Item, xml)
         end
-
       end
     end
-
   end
 end

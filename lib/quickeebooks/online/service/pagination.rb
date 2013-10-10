@@ -12,7 +12,6 @@ module Quickeebooks
         def to_s
           "PageNum=#{@page}\nResultsPerPage=#{@results_per_page}"
         end
-
       end
     end
   end

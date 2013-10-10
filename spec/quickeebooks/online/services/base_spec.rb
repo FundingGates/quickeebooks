@@ -1,4 +1,4 @@
-describe Quickeebooks::Online::Service::ServiceBase do
+describe Quickeebooks::Online::Service::Base do
   before :each do
     FakeWeb.allow_net_connect = false
   end
@@ -23,9 +23,9 @@ describe Quickeebooks::Online::Service::ServiceBase do
       @oauth = OAuth::AccessToken.new(@oauth_consumer, "blah", "blah")
 
       xml = onlineFixture("user.xml")
-      user_url = Quickeebooks::Online::Service::ServiceBase::QB_BASE_URI + "/" + @realm_id
+      user_url = Quickeebooks::Online::Service::Base::QB_BASE_URI + "/" + @realm_id
       FakeWeb.register_uri(:get, user_url, :status => ["200", "OK"], :body => xml)
-      @service = Quickeebooks::Online::Service::ServiceBase.new
+      @service = Quickeebooks::Online::Service::Base.new
       @service.access_token = @oauth
       @service.instance_eval {
         @realm_id = "9991111222"

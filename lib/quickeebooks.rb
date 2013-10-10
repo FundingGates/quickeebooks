@@ -133,7 +133,7 @@ require 'quickeebooks/windows/model/sales_receipt'
 # Services
 require 'quickeebooks/windows/service/filter'
 require 'quickeebooks/windows/service/sort'
-require 'quickeebooks/windows/service/service_base'
+require 'quickeebooks/windows/service/base'
 require 'quickeebooks/windows/service/account'
 require 'quickeebooks/windows/service/customer'
 require 'quickeebooks/windows/service/item'
