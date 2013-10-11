@@ -1,6 +1,5 @@
 describe "Quickeebooks::Online::Model::Payment" do
-
-  describe "parse invoice from XML" do
+  it "can parse invoice from XML" do
     xml = onlineFixture("payment.xml")
     invoice = Quickeebooks::Online::Model::Payment.from_xml(xml)
     invoice.id.value.should == "47"
@@ -15,5 +14,4 @@ describe "Quickeebooks::Online::Model::Payment" do
 
     invoice.line_items.first.amount.should == invoice.header.total_amount
   end
-
 end
