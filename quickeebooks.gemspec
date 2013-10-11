@@ -14,16 +14,16 @@ Gem::Specification.new do |gem|
 
   gem.files = Dir["**/*"]
 
-  gem.add_dependency 'roxml', '~> 3.3.1'
-  gem.add_dependency 'oauth', '~> 0.4.7'
-  gem.add_dependency 'nokogiri', '~> 1.5.9'
-  gem.add_dependency 'activemodel', '~> 3.2.13'
-  gem.add_dependency 'uuidtools', '~> 2.1.4'
-  gem.add_dependency 'json', '~> 1.7.7'
+  gem.add_dependency 'roxml', '~> 3.3'
+  gem.add_dependency 'oauth', '~> 0.4'
+  gem.add_dependency 'nokogiri', '~> 1.5'
+  gem.add_dependency 'activemodel', '~> 3.2'
+  gem.add_dependency 'uuidtools', '~> 2.1'
+  gem.add_dependency 'json', '~> 1.7'
 
-  gem.add_development_dependency 'rake'
-  gem.add_development_dependency 'simplecov'
-  gem.add_development_dependency 'rr',     '~> 1.0.2'
-  gem.add_development_dependency 'rspec',  '2.11.0'
-  gem.add_development_dependency 'fakeweb'
+  gem.add_development_dependency 'rake', '~> 10.0'
+  gem.add_development_dependency 'simplecov', '~> 0.7'
+  gem.add_development_dependency 'rr', '~> 1.0'
+  gem.add_development_dependency 'rspec',  '~> 2.11'
+  gem.add_development_dependency 'fakeweb', '~> 1.3'
 end
