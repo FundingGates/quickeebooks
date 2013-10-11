@@ -2,6 +2,7 @@ require 'roxml'
 require 'nokogiri'
 require 'logger'
 require 'active_model'
+require 'oauth'
 
 #== Base files
 

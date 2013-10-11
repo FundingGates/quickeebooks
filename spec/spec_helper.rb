@@ -10,7 +10,6 @@ end
 require 'rubygems'
 require 'rspec'
 require 'fakeweb'
-require 'oauth'
 require 'quickeebooks'
 
 RSpec.configure do |config|
