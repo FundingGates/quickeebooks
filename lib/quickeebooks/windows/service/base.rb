@@ -11,26 +11,10 @@ module Quickeebooks
           'https://services.intuit.com/sb'
         end
 
-        attr_reader :last_response_body
-        attr_reader :last_response_xml
-
-        def url_for_resource(resource)
-          url_for_base(resource)
-        end
+        private
 
         def guid
           UUIDTools::UUID.random_create.to_s.gsub('-', '')
-        end
-
-        private
-
-        def parse_xml(xml)
-          @last_response_xml =
-          begin
-            x = Nokogiri::XML(xml)
-            #x.document.remove_namespaces!
-            x
-          end
         end
 
         # In QBD a single object response is the same as a collection response except
@@ -75,7 +59,7 @@ module Quickeebooks
         def parse_collection(response, model)
           if response
             collection = Quickeebooks::Collection.new
-            xml = @last_response_xml
+            xml = parse_xml(response.body)
             begin
               results = []
               path_to_nodes = "//xmlns:RestResponse/xmlns:#{model::XML_COLLECTION_NODE}/xmlns:#{model::XML_NODE}"
@@ -120,13 +104,11 @@ module Quickeebooks
         end
 
         def check_response(response)
-          parse_xml(response.body)
-          status = response.code.to_i
-          case status
+          case response.status
           when 200
             # even HTTP 200 can contain an error, so we always have to peek for an Error
-            if response_is_error?
-              parse_and_raise_exceptione
+            if response_is_error?(response)
+              parse_and_raise_exception(response)
             else
               response
             end
@@ -135,35 +117,35 @@ module Quickeebooks
           when 401
             raise AuthorizationFailure
           when 400, 500
-            parse_and_raise_exceptione
+            parse_and_raise_exception(xml)
           else
             raise "HTTP Error Code: #{status}, Msg: #{response.body}"
           end
         end
 
-        def parse_and_raise_exceptione
-          err = parse_intuit_error
+        def parse_and_raise_exception(xml)
+          err = parse_intuit_error(xml)
           ex = IntuitRequestException.new(err[:message])
           ex.code = err[:code]
           ex.cause = err[:cause]
           raise ex
         end
 
-        def response_is_error?
-          @last_response_xml.xpath("//xmlns:RestResponse/xmlns:Error").first != nil
+        def response_is_error?(xml)
+          xml.xpath("//xmlns:RestResponse/xmlns:Error").first != nil
         rescue Nokogiri::XML::XPath::SyntaxError => e
           unless e.message =~ /Undefined namespace prefix/
             raise e
           end
         end
 
-        def parse_intuit_error
+        def parse_intuit_error(xml)
           error = {:message => "", :code => 0, :cause => ""}
-          fault = @last_response_xml.xpath("//xmlns:RestResponse/xmlns:Error/xmlns:ErrorDesc")[0]
+          fault = xml.xpath("//xmlns:RestResponse/xmlns:Error/xmlns:ErrorDesc")[0]
           if fault
             error[:message] = fault.text
           end
-          error_code = @last_response_xml.xpath("//xmlns:RestResponse/xmlns:Error/xmlns:ErrorCode")[0]
+          error_code = xml.xpath("//xmlns:RestResponse/xmlns:Error/xmlns:ErrorCode")[0]
           if error_code
             error[:code] = error_code.text
           end

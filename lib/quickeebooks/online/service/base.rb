@@ -10,21 +10,14 @@ module Quickeebooks
           'https://qbo.sbfinance.intuit.com'
         end
 
-        # uri is of the form `https://qbo.intuit.com/qbo36`
-        def base_url=(uri)
-          @base_uri = uri
+        def self.resource_url
+          "#{base_url}/resource"
         end
 
-        def url_for_resource(resource)
-          url_for_base("resource/#{resource}")
-        end
-
-        # gives us the qbo user's LoginName
-        # useful for verifying email address against
         def login_name
           @login_name ||= begin
-            url = "https://qbo.intuit.com/qbo1/rest/user/v2/#{@realm_id}"
-            response = @oauth.request(:get, url)
+            url = build_url('https://qbo.intuit.com/qbo1/rest', 'user')
+            response = access_token.request(:get, url)
             if response && response.code.to_i == 200
               xml = parse_xml(response.body)
               xml.xpath("//qbo:QboUser/qbo:LoginName")[0].text
@@ -33,10 +26,6 @@ module Quickeebooks
         end
 
         private
-
-        def parse_xml(xml)
-          Nokogiri::XML(xml)
-        end
 
         def fetch_object(model, url, params = {}, options = {})
           raise ArgumentError, "missing model to instantiate" if model.nil?
