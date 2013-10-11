@@ -7,7 +7,6 @@ require 'active_model'
 
 require 'quickeebooks/extensions/roxml'
 require 'quickeebooks/errors'
-require 'quickeebooks/request'
 require 'quickeebooks/collection'
 
 #== Shared
@@ -17,6 +16,7 @@ require 'quickeebooks/shared/service/filter'
 require 'quickeebooks/shared/service/access_token'
 require 'quickeebooks/shared/service/sort'
 require 'quickeebooks/shared/service/base'
+require 'quickeebooks/shared/service/request'
 
 #== Online
 
