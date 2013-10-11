@@ -91,7 +91,7 @@ describe "Quickeebooks::Shared::Service::Filter" do
     before do
       # ActiveSupport::TimeWithZone is_a? Time but doesn't behave similarly.
       # This test lets us mock out that use case and verify it works
-      @fake_time = mock(Object)
+      @fake_time = Object.new
       @fake_time.stub(:is_a?).with(Time).and_return(true)
       @fake_time.stub(:is_a?).with(Date).and_return(false)
       @fake_time.stub(:strftime).and_return("2020-12-31T12:00:00EST")

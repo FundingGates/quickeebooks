@@ -41,7 +41,7 @@ describe Quickeebooks::Online::Service::Base do
 
     describe "#fetch_collection" do
       before do
-        @model = mock(Object)
+        @model = Object.new
         @model.stub(:resource_for_collection){ "foos" }
 
         @url = @service.url_for_resource(@model.resource_for_collection)
