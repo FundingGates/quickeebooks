@@ -1,11 +1,4 @@
 describe Quickeebooks::Online::Service::Base do
-  before :each do
-    FakeWeb.allow_net_connect = false
-  end
-  after :each do
-    FakeWeb.allow_net_connect = true
-  end
-
   it_behaves_like 'Quickeebooks::Shared::Service::Base'
 
   context '' do
@@ -24,7 +17,7 @@ describe Quickeebooks::Online::Service::Base do
 
       xml = onlineFixture("user.xml")
       user_url = Quickeebooks::Online::Service::Base.base_url + "/" + @realm_id
-      FakeWeb.register_uri(:get, user_url, :status => ["200", "OK"], :body => xml)
+      stub_request(:get, user_url).to_return(:status => ["200", "OK"], :body => xml)
       @service = Quickeebooks::Online::Service::Base.new
       @service.access_token = @oauth
       @service.instance_eval {
@@ -35,7 +28,7 @@ describe Quickeebooks::Online::Service::Base do
     it "can determine login_name" do
       xml = onlineFixture("user.xml")
       user_url = "https://qbo.intuit.com/qbo1/rest/user/v2/#{@realm_id}"
-      FakeWeb.register_uri(:get, user_url, :status => ["200", "OK"], :body => xml)
+      stub_request(:get, user_url).to_return(:status => ["200", "OK"], :body => xml)
       @service.login_name.should == 'foo@example.com'
     end
 

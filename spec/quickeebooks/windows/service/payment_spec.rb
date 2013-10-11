@@ -1,6 +1,5 @@
 describe "Quickeebooks::Windows::Service::Payment" do
   before(:all) do
-    FakeWeb.allow_net_connect = false
     qb_key = "key"
     qb_secret = "secreet"
 
@@ -22,10 +21,8 @@ describe "Quickeebooks::Windows::Service::Payment" do
     service.realm_id = @realm_id
 
     model = Quickeebooks::Windows::Model::Payment
-    FakeWeb.register_uri(:post,
-                         service.url_for_resource(model::REST_RESOURCE),
-                         :status => ["200", "OK"],
-                         :body => xml)
+    stub_request(:post, service.url_for_resource(model::REST_RESOURCE)).
+      to_return(:status => ["200", "OK"], :body => xml)
     payments = service.list
     payments.entries.count.should == 1
 

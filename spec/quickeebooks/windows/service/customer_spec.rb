@@ -1,6 +1,5 @@
 describe "Quickeebooks::Windows::Service::Customer" do
   before(:all) do
-    FakeWeb.allow_net_connect = false
     qb_key = "key"
     qb_secret = "secreet"
 
@@ -21,7 +20,7 @@ describe "Quickeebooks::Windows::Service::Customer" do
     service = Quickeebooks::Windows::Service::Customer.new
     service.access_token = @oauth
     service.realm_id = @realm_id
-    FakeWeb.register_uri(:post, service.url_for_resource(model::REST_RESOURCE), :status => ["200", "OK"], :body => xml)
+    stub_request(:post, service.url_for_resource(model::REST_RESOURCE)).to_return(:status => ["200", "OK"], :body => xml)
     accounts = service.list
     accounts.entries.count.should == 3
     wine_house = accounts.entries.first
@@ -48,7 +47,7 @@ describe "Quickeebooks::Windows::Service::Customer" do
       service = Quickeebooks::Windows::Service::Customer.new
       service.access_token = @oauth
       service.realm_id = @realm_id
-      FakeWeb.register_uri(:get, "#{service.url_for_resource(model::REST_RESOURCE)}/341?idDomain=QB", :status => ["200", "OK"], :body => xml)
+      stub_request(:get, "#{service.url_for_resource(model::REST_RESOURCE)}/341?idDomain=QB").to_return(:status => ["200", "OK"], :body => xml)
       customer = service.fetch_by_id(341)
       customer.name.should == "Wine Stop"
     end
@@ -59,7 +58,7 @@ describe "Quickeebooks::Windows::Service::Customer" do
       service = Quickeebooks::Windows::Service::Customer.new
       service.access_token = @oauth
       service.realm_id = @realm_id
-      FakeWeb.register_uri(:get, "#{service.url_for_resource(model::REST_RESOURCE)}/341?idDomain=QB", :status => ["200", "OK"], :body => xml)
+      stub_request(:get, "#{service.url_for_resource(model::REST_RESOURCE)}/341?idDomain=QB").to_return(:status => ["200", "OK"], :body => xml)
       service.fetch_by_id(341).should eq nil
     end
   end
@@ -139,7 +138,7 @@ describe "Quickeebooks::Windows::Service::Customer" do
 
     service.access_token = @oauth
     service.realm_id = @realm_id
-    FakeWeb.register_uri(:post, service.url_for_resource(model::REST_RESOURCE), :status => ["200", "OK"], :body => xml)
+    stub_request(:post, service.url_for_resource(model::REST_RESOURCE)).to_return(:status => ["200", "OK"], :body => xml)
 
     customer.type_of = "Person"
     customer.name = "Bobs Plumbing"
@@ -171,7 +170,7 @@ describe "Quickeebooks::Windows::Service::Customer" do
 
     service.access_token = @oauth
     service.realm_id = @realm_id
-    FakeWeb.register_uri(:post, service.url_for_resource(model::REST_RESOURCE), :status => ["200", "OK"], :body => update_response_xml)
+    stub_request(:post, service.url_for_resource(model::REST_RESOURCE)).to_return(:status => ["200", "OK"], :body => update_response_xml)
 
     # change the name
     customer.name = "Acme Cafe"

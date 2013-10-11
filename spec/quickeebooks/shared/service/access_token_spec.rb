@@ -6,7 +6,7 @@ describe "Quickeebooks::Shared::Service::AccessToken" do
 
       it "can successfully reconnect" do
         xml = sharedFixture("reconnect_success.xml")
-        FakeWeb.register_uri(:get, reconnect_url, :status => ["200", "OK"], :body => xml)
+        stub_request(:get, reconnect_url).to_return(:status => ["200", "OK"], :body => xml)
 
         response = @service.reconnect
 
@@ -17,7 +17,7 @@ describe "Quickeebooks::Shared::Service::AccessToken" do
 
       it "can handle expired tokens" do
         xml = sharedFixture("reconnect_error_expired.xml")
-        FakeWeb.register_uri(:get, reconnect_url, :status => ["200", "OK"], :body => xml)
+        stub_request(:get, reconnect_url).to_return(:status => ["200", "OK"], :body => xml)
 
         response = @service.reconnect
 
@@ -28,7 +28,7 @@ describe "Quickeebooks::Shared::Service::AccessToken" do
 
       it "can handle out-of-bounds refresh windows" do
         xml = sharedFixture("reconnect_error_out_of_bounds.xml")
-        FakeWeb.register_uri(:get, reconnect_url, :status => ["200", "OK"], :body => xml)
+        stub_request(:get, reconnect_url).to_return(:status => ["200", "OK"], :body => xml)
 
         response = @service.reconnect
 
@@ -40,7 +40,7 @@ describe "Quickeebooks::Shared::Service::AccessToken" do
 
       it "can handle unapproved apps" do
         xml = sharedFixture("reconnect_error_not_approved.xml")
-        FakeWeb.register_uri(:get, reconnect_url, :status => ["200", "OK"], :body => xml)
+        stub_request(:get, reconnect_url).to_return(:status => ["200", "OK"], :body => xml)
 
         response = @service.reconnect
 
@@ -55,7 +55,7 @@ describe "Quickeebooks::Shared::Service::AccessToken" do
 
       it "can successfully disconnect" do
         xml = sharedFixture("disconnect_success.xml")
-        FakeWeb.register_uri(:get, disconnect_url, :status => ["200", "OK"], :body => xml)
+        stub_request(:get, disconnect_url).to_return(:status => ["200", "OK"], :body => xml)
 
         response = @service.disconnect
 
@@ -64,7 +64,7 @@ describe "Quickeebooks::Shared::Service::AccessToken" do
 
       it "can handle invalid tokens" do
         xml = sharedFixture("disconnect_invalid.xml")
-        FakeWeb.register_uri(:get, disconnect_url, :status => ["200", "OK"], :body => xml)
+        stub_request(:get, disconnect_url).to_return(:status => ["200", "OK"], :body => xml)
 
         response = @service.disconnect
 
@@ -77,7 +77,6 @@ describe "Quickeebooks::Shared::Service::AccessToken" do
 
   context "online" do
     before(:all) do
-      FakeWeb.allow_net_connect = false
       qb_key = "key"
       qb_secret = "secreet"
 
@@ -102,7 +101,6 @@ describe "Quickeebooks::Shared::Service::AccessToken" do
 
   context "windows" do
     before(:all) do
-      FakeWeb.allow_net_connect = false
       qb_key = "key"
       qb_secret = "secreet"
 

@@ -1,6 +1,5 @@
 describe "Quickeebooks::Windows::Service::Clazz" do
   before(:all) do
-    FakeWeb.allow_net_connect = false
     qb_key = "key"
     qb_secret = "secreet"
 
@@ -21,7 +20,7 @@ describe "Quickeebooks::Windows::Service::Clazz" do
     service = Quickeebooks::Windows::Service::Clazz.new
     service.access_token = @oauth
     service.realm_id = @realm_id
-    FakeWeb.register_uri(:post, service.url_for_resource(model::REST_RESOURCE), :status => ["200", "OK"], :body => xml)
+    stub_request(:post, service.url_for_resource(model::REST_RESOURCE)).to_return(:status => ["200", "OK"], :body => xml)
     classes = service.list
     classes.entries.count.should == 3
     entry = classes.entries.first

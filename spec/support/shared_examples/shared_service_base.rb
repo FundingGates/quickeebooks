@@ -12,7 +12,7 @@ shared_examples_for 'Quickeebooks::Shared::Service::Base' do
 
       url = base_uri + path
 
-      FakeWeb.register_uri(:get, url, body: body, status: status)
+      stub_request(:get, url).to_return(body: body, status: status)
 
       consumer = build_oauth_consumer(site: base_uri)
       access_token = build_oauth_access_token(consumer: consumer)

@@ -1,6 +1,5 @@
 describe "Quickeebooks::Online::Service::Invoice" do
   before(:all) do
-    FakeWeb.allow_net_connect = false
     qb_key = "key"
     qb_secret = "secreet"
 
@@ -23,7 +22,7 @@ describe "Quickeebooks::Online::Service::Invoice" do
     xml = onlineFixture("invoice.xml")
 
     url = @service.url_for_resource(Quickeebooks::Online::Model::Invoice.resource_for_singular)
-    FakeWeb.register_uri(:post, url, :status => ["200", "OK"], :body => xml)
+    stub_request(:post, url).to_return(:status => ["200", "OK"], :body => xml)
     invoice = Quickeebooks::Online::Model::Invoice.new
     invoice.header = Quickeebooks::Online::Model::InvoiceHeader.new
     invoice.header.doc_number = "123"
@@ -42,7 +41,7 @@ describe "Quickeebooks::Online::Service::Invoice" do
   it "handles 400 errors which are in the form of HTML when making a list request" do
     xml = onlineFixture("no_destination_found.html")
     url = @service.url_for_resource(Quickeebooks::Online::Model::Invoice.resource_for_collection)
-    FakeWeb.register_uri(:post, url, :status => ["400", "Bad Request"], :body => xml)
+    stub_request(:post, url).to_return(:status => ["400", "Bad Request"], :body => xml)
     lambda { @service.list }.should \
       raise_error(IntuitRequestException, "HTTP Status 400 - message=No destination found for given partition key; errorCode=007001; statusCode=400")
   end

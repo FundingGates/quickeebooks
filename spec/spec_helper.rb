@@ -9,8 +9,10 @@ end
 
 require 'rubygems'
 require 'rspec'
-require 'fakeweb'
+require 'webmock/rspec'
 require 'quickeebooks'
+
+WebMock.disable_net_connect!
 
 RSpec.configure do |config|
   config.color_enabled = true

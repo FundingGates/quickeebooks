@@ -1,6 +1,5 @@
 describe "Quickeebooks::Windows::Service::SalesRep" do
   before(:all) do
-    FakeWeb.allow_net_connect = false
     qb_key = "key"
     qb_secret = "secreet"
 
@@ -22,7 +21,7 @@ describe "Quickeebooks::Windows::Service::SalesRep" do
     service.realm_id = @realm_id
 
     model = Quickeebooks::Windows::Model::SalesRep
-    FakeWeb.register_uri(:post, service.url_for_resource(model::REST_RESOURCE), :status => ["200", "OK"], :body => xml)
+    stub_request(:post, service.url_for_resource(model::REST_RESOURCE)).to_return(:status => ["200", "OK"], :body => xml)
     reps = service.list
     reps.entries.count.should == 10
 

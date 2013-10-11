@@ -1,6 +1,5 @@
 describe "Quickeebooks::Online::Service::Account" do
   before(:all) do
-    FakeWeb.allow_net_connect = false
     qb_key = "key"
     qb_secret = "secreet"
 
@@ -23,14 +22,14 @@ describe "Quickeebooks::Online::Service::Account" do
   it "receives 404 from invalid base URL" do
     uri = "https://qbo.intuit.com/invalid"
     url = @service.url_for_resource(Quickeebooks::Online::Model::Account.resource_for_collection)
-    FakeWeb.register_uri(:post, url, :status => ["200", "OK"], :body => "blah")
+    stub_request(:post, url).to_return(:status => ["200", "OK"], :body => "blah")
     lambda { @service.list }.should raise_error(IntuitRequestException)
   end
 
   it "can fetch a list of accounts" do
     xml = File.read(File.dirname(__FILE__) + "/../../../xml/online/accounts.xml")
     url = @service.url_for_resource(Quickeebooks::Online::Model::Account.resource_for_collection)
-    FakeWeb.register_uri(:post, url, :status => ["200", "OK"], :body => xml)
+    stub_request(:post, url).to_return(:status => ["200", "OK"], :body => xml)
     accounts = @service.list
     accounts.current_page.should == 1
     accounts.entries.count.should == 10
@@ -40,7 +39,7 @@ describe "Quickeebooks::Online::Service::Account" do
   it "handles 400 errors which are in the form of HTML when making a list request" do
     xml = onlineFixture("no_destination_found.html")
     url = @service.url_for_resource(Quickeebooks::Online::Model::Account.resource_for_collection)
-    FakeWeb.register_uri(:post, url, :status => ["400", "Bad Request"], :body => xml)
+    stub_request(:post, url).to_return(:status => ["400", "Bad Request"], :body => xml)
     lambda { @service.list }.should \
       raise_error(IntuitRequestException, "HTTP Status 400 - message=No destination found for given partition key; errorCode=007001; statusCode=400")
   end
@@ -48,7 +47,7 @@ describe "Quickeebooks::Online::Service::Account" do
   it "can create an account" do
     xml = File.read(File.dirname(__FILE__) + "/../../../xml/online/account.xml")
     url = @service.url_for_resource(Quickeebooks::Online::Model::Account.resource_for_singular)
-    FakeWeb.register_uri(:post, url, :status => ["200", "OK"], :body => xml)
+    stub_request(:post, url).to_return(:status => ["200", "OK"], :body => xml)
     account = Quickeebooks::Online::Model::Account.new
     account.name = "Billy Bob"
     account.sub_type = "AccountsPayable"
@@ -60,7 +59,7 @@ describe "Quickeebooks::Online::Service::Account" do
   it "can delete an account" do
     url = @service.url_for_resource(Quickeebooks::Online::Model::Account.resource_for_singular)
     url = "#{url}/99?methodx=delete"
-    FakeWeb.register_uri(:post, url, :status => ["200", "OK"])
+    stub_request(:post, url).to_return(:status => ["200", "OK"])
     account = Quickeebooks::Online::Model::Account.new
     account.id = 99
     account.sync_token = 0
@@ -82,7 +81,7 @@ describe "Quickeebooks::Online::Service::Account" do
     xml = onlineFixture("account.xml")
     url = @service.url_for_resource(Quickeebooks::Online::Model::Account.resource_for_singular)
     url = "#{url}/99"
-    FakeWeb.register_uri(:get, url, :status => ["200", "OK"], :body => xml)
+    stub_request(:get, url).to_return(:status => ["200", "OK"], :body => xml)
     account = @service.fetch_by_id(99)
     account.name.should == "Billy Bob"
   end

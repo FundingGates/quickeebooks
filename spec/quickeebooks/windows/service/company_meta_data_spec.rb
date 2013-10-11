@@ -1,6 +1,5 @@
 describe "Quickeebooks::Windows::Service::CompanyMetaData" do
   before(:all) do
-    FakeWeb.allow_net_connect = false
     qb_key = "key"
     qb_secret = "secreet"
 
@@ -21,7 +20,7 @@ describe "Quickeebooks::Windows::Service::CompanyMetaData" do
     service = Quickeebooks::Windows::Service::CompanyMetaData.new
     service.access_token = @oauth
     service.realm_id = @realm_id
-    FakeWeb.register_uri(:get, service.url_for_resource(model::REST_RESOURCE), :status => ["200", "OK"], :body => xml)
+    stub_request(:get, service.url_for_resource(model::REST_RESOURCE)).to_return(:status => ["200", "OK"], :body => xml)
     company_meta_data_response = service.load
 
     company_meta_data_response.registered_company_name.should == "Castle Rock Construction"

@@ -1,11 +1,4 @@
 describe Quickeebooks::Windows::Service::Base do
-  before :each do
-    FakeWeb.allow_net_connect = false
-  end
-  after :each do
-    FakeWeb.allow_net_connect = true
-  end
-
   it_behaves_like 'Quickeebooks::Shared::Service::Base'
 
   context '' do

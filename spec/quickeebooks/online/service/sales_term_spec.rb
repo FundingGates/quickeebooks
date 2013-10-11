@@ -1,6 +1,5 @@
 describe "Quickeebooks::Online::Service::SalesTerm" do
   before(:all) do
-    FakeWeb.allow_net_connect = false
     qb_key = "key"
     qb_secret = "secreet"
 
@@ -25,7 +24,7 @@ describe "Quickeebooks::Online::Service::SalesTerm" do
     xml = onlineFixture("sales_term.xml")
     url = @service.url_for_resource(Quickeebooks::Online::Model::SalesTerm.resource_for_singular)
     url = "#{url}/99?idDomain=QB"
-    FakeWeb.register_uri(:get, url, :status => ["200", "OK"], :body => xml)
+    stub_request(:get, url).to_return(:status => ["200", "OK"], :body => xml)
     sales_term = @service.fetch_by_id(99)
 
     sales_term.id.value.should == '3'

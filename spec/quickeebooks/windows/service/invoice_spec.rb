@@ -1,6 +1,5 @@
 describe "Quickeebooks::Windows::Service::Invoice" do
   before(:all) do
-    FakeWeb.allow_net_connect = false
     qb_key = "key"
     qb_secret = "secreet"
 
@@ -22,7 +21,7 @@ describe "Quickeebooks::Windows::Service::Invoice" do
     service.realm_id = @realm_id
 
     model = Quickeebooks::Windows::Model::Invoice
-    FakeWeb.register_uri(:post, service.url_for_resource(model::REST_RESOURCE), :status => ["200", "OK"], :body => xml)
+    stub_request(:post, service.url_for_resource(model::REST_RESOURCE)).to_return(:status => ["200", "OK"], :body => xml)
     invoices = service.list
     invoices.entries.count.should == 7
 
@@ -80,7 +79,7 @@ describe "Quickeebooks::Windows::Service::Invoice" do
     service.realm_id = @realm_id
 
     model = Quickeebooks::Windows::Model::Invoice
-    FakeWeb.register_uri(:post, service.url_for_resource(model::REST_RESOURCE), :status => ["200", "OK"], :body => xml)
+    stub_request(:post, service.url_for_resource(model::REST_RESOURCE)).to_return(:status => ["200", "OK"], :body => xml)
 
     invoice = Quickeebooks::Windows::Model::Invoice.new
     header = Quickeebooks::Windows::Model::InvoiceHeader.new

@@ -1,6 +1,5 @@
 describe "Quickeebooks::Windows::Service::SalesTax" do
   before(:all) do
-    FakeWeb.allow_net_connect = false
     qb_key = "key"
     qb_secret = "secreet"
 
@@ -21,7 +20,7 @@ describe "Quickeebooks::Windows::Service::SalesTax" do
     service = Quickeebooks::Windows::Service::SalesTax.new
     service.access_token = @oauth
     service.realm_id = @realm_id
-    FakeWeb.register_uri(:post, service.url_for_resource(model::REST_RESOURCE), :status => ["200", "OK"], :body => xml)
+    stub_request(:post, service.url_for_resource(model::REST_RESOURCE)).to_return(:status => ["200", "OK"], :body => xml)
     shipping_methods = service.list
     shipping_methods.entries.count.should == 2
 
