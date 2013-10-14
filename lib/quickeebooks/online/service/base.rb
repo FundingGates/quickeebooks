@@ -27,7 +27,18 @@ module Quickeebooks
 
         private
 
-        def fetch_object(model, url, params = {}, options = {})
+        def fetch_object(model_class, options = {})
+          response = http.get(self.class.resource_url, options)
+          xml = response.parsed_body
+          element = xml.at_xpath("//xmlns:#{model_class.node_name}")
+          model_class.from_xml(element)
+
+          #---
+
+          ObjectFetcher.new(self).call(model_class, options)
+
+          #---
+
           raise ArgumentError, "missing model to instantiate" if model.nil?
           response = do_http_get(url, params, {'Content-Type' => 'text/xml'})
 

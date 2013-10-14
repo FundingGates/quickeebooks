@@ -4,18 +4,36 @@ describe Quickeebooks::Online::Service::ObjectFetcher do
   include ServiceFetcherHelpers
 
   describe '#call' do
-    it "makes a GET request with the correct arguments" do
+    it "makes a request with the correct arguments" do
       model_class = build_model_class
-      service_class = build_service_class(resource_url: 'http://intuit.com/some_resource')
-
-      http = build_http
       response = build_response_from_model_class(model_class)
-      expect(http).to receive(:get).
-        with('http://intuit.com/some_resource', params: {}).
-        and_return(response)
+      http = build_http(:get, response)
+      service = build_service(
+        resource_url: 'http://intuit.com/some_resource',
+        http: http
+      )
 
-      fetcher = described_class.new(model_class, service_class, http)
-      fetcher.call
+      fetcher = described_class.new(service)
+      fetcher.call(model_class)
+
+      expect(http).to have_received(:get) do |url, _|
+        expect(url).to eq 'http://intuit.com/some_resource'
+      end
+    end
+
+    it "passes any query parameters along" do
+      model_class = build_model_class
+      response = build_response_from_model_class(model_class)
+      http = build_http(:get, response)
+      service = build_service(http: http)
+      params = {foo: 'bar'}
+
+      fetcher = described_class.new(service)
+      fetcher.call(model_class, params: params)
+
+      expect(http).to have_received(:get) do |_, options|
+        expect(options[:params]).to eq params
+      end
     end
 
     it "converts the response to an object" do
@@ -24,19 +42,17 @@ describe Quickeebooks::Online::Service::ObjectFetcher do
         xml_accessor :model, from: 'Model'
         xml_accessor :year, from: 'Year', as: Integer
       end
-      service_class = build_service_class
-
-      http = build_http
       body = build_body_from_model_class(model_class, content: <<-EOT)
         <Make>Ford</Make>
         <Model>Mustang</Model>
         <Year>2013</Year>
       EOT
       response = build_response_from_body(body)
-      allow(http).to receive(:get).and_return(response)
+      http = build_http(:get, response)
+      service = build_service(http: http)
 
-      fetcher = described_class.new(model_class, service_class, http)
-      object = fetcher.call
+      fetcher = described_class.new(service)
+      object = fetcher.call(model_class)
 
       expect(object.make).to eq 'Ford'
       expect(object.model).to eq 'Mustang'

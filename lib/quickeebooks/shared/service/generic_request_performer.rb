@@ -5,9 +5,8 @@ module Quickeebooks
   module Shared
     module Service
       class GenericRequestPerformer
-        def initialize(access_token, response_handler)
-          self.access_token = access_token
-          self.response_handler = response_handler
+        def initialize(service)
+          self.service = service
         end
 
         protected
@@ -20,23 +19,18 @@ module Quickeebooks
           full_url = build_full_url(url, params)
           arguments = build_arguments(body, headers)
 
-          request, response = make_request(method, full_url, arguments)
+          request, response = make_wrapped_request_and_response(method, full_url, arguments)
           yield request, response if block_given?
-          response_handler.call(response)
           response
         end
 
         private
 
-        attr_accessor :access_token, :response_handler, :method, :url, :params,
-          :headers, :body
+        attr_accessor :service
 
-        extend Forwardable
-        def_delegators :access_token, :consumer
-
-        def make_request(method, url, arguments)
+        def make_wrapped_request_and_response(method, url, arguments)
           request = nil
-          wrapped_response = consumer.request(method, url, access_token, {}, *arguments) do |wrapped_request|
+          wrapped_response = service.request(method, url, *arguments) do |wrapped_request|
             request = Quickeebooks::Shared::Service::Request.new(wrapped_request)
             request.uri = url
           end

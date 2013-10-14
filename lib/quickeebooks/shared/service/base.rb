@@ -1,3 +1,5 @@
+require 'forwardable'
+
 module Quickeebooks
   module Shared
     module Service
@@ -28,6 +30,9 @@ module Quickeebooks
         end
 
         private
+
+        extend Forwardable
+        def_delegators :access_token, :consumer
 
         def build_url(base_url, path)
           "#{base_url}/#{path}/v2/#{realm_id}"
@@ -83,6 +88,10 @@ module Quickeebooks
           if @on_request
             @on_request.call(request, response)
           end
+        end
+
+        def request(method, url, *args, &block)
+          consumer.request(method, url, access_token, {}, *args, &block)
         end
       end
     end
