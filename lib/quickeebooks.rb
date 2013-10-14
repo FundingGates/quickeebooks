@@ -19,6 +19,9 @@ require 'quickeebooks/shared/service/sort'
 require 'quickeebooks/shared/service/base'
 require 'quickeebooks/shared/service/request'
 require 'quickeebooks/shared/service/response'
+require 'quickeebooks/shared/service/generic_request_performer'
+require 'quickeebooks/shared/service/get_request_performer'
+require 'quickeebooks/shared/service/post_request_performer'
 
 #== Online
 
@@ -50,7 +53,6 @@ require 'quickeebooks/online/service/pagination'
 require 'quickeebooks/online/service/sort'
 require 'quickeebooks/online/service/object_fetcher'
 require 'quickeebooks/online/service/collection_fetcher'
-require 'quickeebooks/online/service/http'
 require 'quickeebooks/online/service/company_meta_data'
 require 'quickeebooks/online/service/customer'
 require 'quickeebooks/online/service/account'
