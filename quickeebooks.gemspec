@@ -25,4 +25,5 @@ Gem::Specification.new do |gem|
   gem.add_development_dependency 'simplecov', '~> 0.7'
   gem.add_development_dependency 'rspec',  '~> 2.11'
   gem.add_development_dependency 'webmock', '~> 1.14'
+  gem.add_development_dependency 'spork', '~> 1.0rc'
 end
