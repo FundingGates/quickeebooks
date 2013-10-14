@@ -21,6 +21,7 @@ Spork.prefork do
   require 'logger'
   require 'active_model'
   require 'oauth'
+  require 'rexml/document'
 end
 
 Spork.each_run do
