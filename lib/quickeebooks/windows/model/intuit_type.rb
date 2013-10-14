@@ -4,6 +4,10 @@ module Quickeebooks
       class IntuitType
         include ROXML
 
+        def self.node_name
+          self::XML_NODE
+        end
+
         private
 
         def log(msg)
@@ -11,7 +15,7 @@ module Quickeebooks
           Quickeebooks.logger.flush if Quickeebooks.logger.respond_to?(:flush)
         end
 
-      end 
-    end    
+      end
+    end
   end
 end

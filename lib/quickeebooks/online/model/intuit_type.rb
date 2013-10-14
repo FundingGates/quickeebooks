@@ -20,6 +20,9 @@ module Quickeebooks
           self::REST_RESOURCE
         end
 
+        def self.node_name
+          self::XML_NODE
+        end
 
         private
 
