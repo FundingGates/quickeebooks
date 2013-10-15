@@ -28,6 +28,7 @@ module Quickeebooks
         private
 
         def fetch_object(model_class, options = {})
+=begin
           response = http.get(self.class.resource_url, options)
           xml = response.parsed_body
           element = xml.at_xpath("//xmlns:#{model_class.node_name}")
@@ -36,6 +37,7 @@ module Quickeebooks
           #---
 
           ObjectFetcher.new(self).call(model_class, options)
+=end
 
           #---
 

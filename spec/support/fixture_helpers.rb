@@ -6,6 +6,7 @@ module FixtureHelpers
   def onlineFixture(file)
     File.new(fixture_path + '/online/' + file).read
   end
+  alias_method :read_qbo_fixture, :onlineFixture
 
   def sharedFixture(file)
     File.new(fixture_path + '/shared/' + file).read
