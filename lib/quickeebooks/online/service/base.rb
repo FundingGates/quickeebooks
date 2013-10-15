@@ -140,6 +140,10 @@ module Quickeebooks
 
           error
         end
+
+        def response_handler
+          @_response_handler ||= Quickeebooks::Online::Service::ResponseHandler.new
+        end
       end
     end
   end

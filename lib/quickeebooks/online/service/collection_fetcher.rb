@@ -2,16 +2,14 @@ module Quickeebooks
   module Online
     module Service
       class CollectionFetcher
-        def initialize(model_class, service_class, http)
-          self.model_class = model_class
-          self.service_class = service_class
-          self.http = http
+        def initialize(service)
+          self.service = service
         end
 
-        def call(options = {})
+        def call(model_class, options = {})
           page = options.fetch(:page, 1)
           per_page = options.fetch(:per_page, 20)
-          url = service_class.collection_url
+          url = service.class.collection_url
 
           body = {
             'PageNum' => page,
@@ -28,17 +26,21 @@ module Quickeebooks
           xml = response.parsed_body
 
           Quickeebooks::Collection.new.tap do |collection|
-            collection.entries = xml.xpath("//qbo:SearchResults/qbo:CdmCollections/xmlns:#{model_class.node_name}").map do |element|
+            results = xml.at_xpath('//qbo:SearchResults')
+            collection.entries = results.xpath("//qbo:CdmCollections/xmlns:#{model_class.node_name}").map do |element|
               model_class.from_xml(element)
             end
-            collection.count = xml.xpath("//qbo:SearchResults/qbo:Count")[0].text.to_i
-            collection.current_page = xml.xpath("//qbo:SearchResults/qbo:CurrentPage")[0].text.to_i
+            collection.count = results.at_xpath("//qbo:Count").text.to_i
+            collection.current_page = results.at_xpath("//qbo:CurrentPage").text.to_i
           end
         end
 
         private
 
-        attr_accessor :model_class, :service_class, :http
+        attr_accessor :service
+
+        extend Forwardable
+        def_delegators :service, :http
       end
     end
   end

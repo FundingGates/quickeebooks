@@ -4,7 +4,7 @@ describe Quickeebooks::Online::Service::ObjectFetcher do
   include ServiceFetcherHelpers
 
   describe '#call' do
-    it "makes a request with the correct arguments" do
+    it "makes a GET request with the correct arguments" do
       model_class = build_model_class
       response = build_response_from_model_class(model_class)
       http = build_http(:get, response)

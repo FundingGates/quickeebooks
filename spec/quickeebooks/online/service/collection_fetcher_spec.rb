@@ -6,20 +6,22 @@ describe Quickeebooks::Online::Service::CollectionFetcher do
   describe '#call' do
     it "makes a POST request with the correct arguments" do
       model_class = build_model_class
-      service_class = build_service_class(collection_url: 'http://intuit.com/some_collection')
-
-      http = build_http
       response = build_response_from_model_class(model_class)
+      http = build_http(:post, response)
+      service = build_service(
+        collection_url: 'http://intuit.com/some_collection',
+        http: http
+      )
       body = {
         'PageNum' => 1,
         'ResultsPerPage' => 20
       }
-      expect(http).to receive(:post).
-        with('http://intuit.com/some_collection', body: body).
-        and_return(response)
 
-      fetcher = described_class.new(model_class, service_class, http)
-      fetcher.call
+      fetcher = described_class.new(service)
+      fetcher.call(model_class)
+
+      expect(http).to have_received(:post).
+        with('http://intuit.com/some_collection', body: body)
     end
 
     it "converts the response to a Quickeebooks::Collection" do
@@ -28,9 +30,6 @@ describe Quickeebooks::Online::Service::CollectionFetcher do
         xml_accessor :model, from: 'Model'
         xml_accessor :year, from: 'Year', as: Integer
       end
-      service_class = build_service_class
-
-      http = build_http
       body = build_body_from_model_class(model_class, items: [<<-FIRST, <<-SECOND], current_page: 42)
         <Make>Ford</Make>
         <Model>Mustang</Model>
@@ -41,10 +40,11 @@ describe Quickeebooks::Online::Service::CollectionFetcher do
         <Year>2010</Year>
       SECOND
       response = build_response_from_body(body)
-      allow(http).to receive(:post).and_return(response)
+      http = build_http(:post, response)
+      service = build_service(http: http)
 
-      fetcher = described_class.new(model_class, service_class, http)
-      collection = fetcher.call
+      fetcher = described_class.new(service)
+      collection = fetcher.call(model_class)
 
       expect(collection.count).to eq 2
       expect(collection.current_page).to eq 42
@@ -60,62 +60,70 @@ describe Quickeebooks::Online::Service::CollectionFetcher do
 
     it "allows the page number to be overridden" do
       model_class = build_model_class
-      service_class = build_service_class(collection_url: 'http://intuit.com/some_collection')
-
-      http = build_http
       response = build_response_from_model_class(model_class)
+      http = build_http(:post, response)
+      service = build_service(
+        collection_url: 'http://intuit.com/some_collection',
+        http: http
+      )
       body = hash_including('PageNum' => 10)
-      expect(http).to receive(:post).
-        with('http://intuit.com/some_collection', body: body).
-        and_return(response)
 
-      fetcher = described_class.new(model_class, service_class, http)
-      fetcher.call(page: 10)
+      fetcher = described_class.new(service)
+      fetcher.call(model_class, page: 10)
+
+      expect(http).to have_received(:post).
+        with('http://intuit.com/some_collection', body: body)
     end
 
     it "allows the number of results per page to be overridden" do
       model_class = build_model_class
-      service_class = build_service_class(collection_url: 'http://intuit.com/some_collection')
-
-      http = build_http
       response = build_response_from_model_class(model_class)
+      http = build_http(:post, response)
+      service = build_service(
+        collection_url: 'http://intuit.com/some_collection',
+        http: http
+      )
       body = hash_including('ResultsPerPage' => 100)
-      expect(http).to receive(:post).
-        with('http://intuit.com/some_collection', body: body).
-        and_return(response)
 
-      fetcher = described_class.new(model_class, service_class, http)
-      fetcher.call(per_page: 100)
+      fetcher = described_class.new(service)
+      fetcher.call(model_class, per_page: 100)
+
+      expect(http).to have_received(:post).
+        with('http://intuit.com/some_collection', body: body)
     end
 
     it "allows filters to be provided" do
       model_class = build_model_class
-      service_class = build_service_class(collection_url: 'http://intuit.com/some_collection')
-
-      http = build_http
       response = build_response_from_model_class(model_class)
+      http = build_http(:post, response)
+      service = build_service(
+        collection_url: 'http://intuit.com/some_collection',
+        http: http
+      )
       body = hash_including('Filter' => 'TxnDate :AND: CreateTime')
-      expect(http).to receive(:post).
-        with('http://intuit.com/some_collection', body: body).
-        and_return(response)
 
-      fetcher = described_class.new(model_class, service_class, http)
-      fetcher.call(filters: %w(TxnDate CreateTime))
+      fetcher = described_class.new(service)
+      fetcher.call(model_class, filters: %w(TxnDate CreateTime))
+
+      expect(http).to have_received(:post).
+        with('http://intuit.com/some_collection', body: body)
     end
 
     it "allows the sort parameter to be provided" do
       model_class = build_model_class
-      service_class = build_service_class(collection_url: 'http://intuit.com/some_collection')
-
-      http = build_http
       response = build_response_from_model_class(model_class)
+      http = build_http(:post, response)
+      service = build_service(
+        collection_url: 'http://intuit.com/some_collection',
+        http: http
+      )
       body = hash_including('Sort' => 'CreateTime')
-      expect(http).to receive(:post).
-        with('http://intuit.com/some_collection', body: body).
-        and_return(response)
 
-      fetcher = described_class.new(model_class, service_class, http)
-      fetcher.call(sort: 'CreateTime')
+      fetcher = described_class.new(service)
+      fetcher.call(model_class, sort: 'CreateTime')
+
+      expect(http).to have_received(:post).
+        with('http://intuit.com/some_collection', body: body)
     end
   end
 

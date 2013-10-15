@@ -90,6 +90,10 @@ module Quickeebooks
           end
         end
 
+        def http
+          @_http ||= Quickeebooks::Shared::Service::Http.new(self, response_handler)
+        end
+
         def request(method, url, *args, &block)
           consumer.request(method, url, access_token, {}, *args, &block)
         end
