@@ -27,7 +27,7 @@ module Quickeebooks
 
         private
 
-        def fetch_object(model_class, options = {})
+        def fetch_object(model_class, url, params, options = {})
 =begin
           response = http.get(self.class.resource_url, options)
           xml = response.parsed_body
@@ -41,12 +41,12 @@ module Quickeebooks
 
           #---
 
-          raise ArgumentError, "missing model to instantiate" if model.nil?
+          raise ArgumentError, "missing model to instantiate" if model_class.nil?
           response = do_http_get(url, params, {'Content-Type' => 'text/xml'})
 
           xml = parse_xml(response.body)
-          element = xml.at_xpath("//xmlns:#{model::XML_NODE}")
-          model.from_xml(element)
+          element = xml.at_xpath("//xmlns:#{model_class::XML_NODE}")
+          model_class.from_xml(element)
         rescue => ex
           raise IntuitRequestException.new("Error parsing XML: #{ex.message}")
         end

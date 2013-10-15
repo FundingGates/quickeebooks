@@ -104,11 +104,12 @@ module Quickeebooks
         end
 
         def check_response(response)
+          xml = parse_xml(response.body)
           case response.status
           when 200
             # even HTTP 200 can contain an error, so we always have to peek for an Error
-            if response_is_error?(response)
-              parse_and_raise_exception(response)
+            if response_is_error?(xml)
+              parse_and_raise_exception(xml)
             else
               response
             end
