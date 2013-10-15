@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 describe "Quickeebooks::Windows::Service::CompanyMetaData" do
   before(:all) do
     qb_key = "key"
@@ -14,15 +16,17 @@ describe "Quickeebooks::Windows::Service::CompanyMetaData" do
     @oauth = OAuth::AccessToken.new(@oauth_consumer, "blah", "blah")
   end
 
-  it "can fetch the company meta data" do
-    xml = windowsFixture("company_meta_data.xml")
-    model = Quickeebooks::Windows::Model::CompanyMetaData
-    service = Quickeebooks::Windows::Service::CompanyMetaData.new
-    service.access_token = @oauth
-    service.realm_id = @realm_id
-    stub_request(:get, service.url_for_resource(model::REST_RESOURCE)).to_return(:status => ["200", "OK"], :body => xml)
-    company_meta_data_response = service.load
+  describe '#load' do
+    it "makes a request for the company associated with the realm ID" do
+      xml = windowsFixture("company_meta_data.xml")
+      model = Quickeebooks::Windows::Model::CompanyMetaData
+      service = Quickeebooks::Windows::Service::CompanyMetaData.new
+      service.access_token = @oauth
+      service.realm_id = @realm_id
+      stub_request(:get, service.url_for_resource(model::REST_RESOURCE)).to_return(:status => ["200", "OK"], :body => xml)
+      company_meta_data_response = service.load
 
-    company_meta_data_response.registered_company_name.should == "Castle Rock Construction"
+      company_meta_data_response.registered_company_name.should == "Castle Rock Construction"
+    end
   end
 end

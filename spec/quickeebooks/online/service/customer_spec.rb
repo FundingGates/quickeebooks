@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 describe "Quickeebooks::Online::Service::Customer" do
   before(:all) do
     qb_key = "key"
@@ -19,73 +21,75 @@ describe "Quickeebooks::Online::Service::Customer" do
     }
   end
 
-  it "can fetch a list of customers" do
-    xml = onlineFixture("customers.xml")
-    url = @service.url_for_resource(Quickeebooks::Online::Model::Customer.resource_for_collection)
-    stub_request(:post, url).to_return(:status => ["200", "OK"], :body => xml)
-    accounts = @service.list
-    accounts.current_page.should == 1
-    accounts.entries.count.should == 3
-    accounts.entries.first.name.should == "John Doe"
+  describe '#list' do
+    it "makes a request for a collection of customers" do
+      xml = onlineFixture("customers.xml")
+      url = @service.url_for_resource(Quickeebooks::Online::Model::Customer.resource_for_collection)
+      stub_request(:post, url).to_return(:status => ["200", "OK"], :body => xml)
+      accounts = @service.list
+      accounts.current_page.should == 1
+      accounts.entries.count.should == 3
+      accounts.entries.first.name.should == "John Doe"
+    end
+
+    it "raises an IntuitRequestException for a 400 response" do
+      xml = onlineFixture("no_destination_found.html")
+      url = @service.url_for_resource(Quickeebooks::Online::Model::Customer.resource_for_collection)
+      stub_request(:post, url).to_return(:status => ["400", "Bad Request"], :body => xml)
+      lambda { @service.list }.should \
+        raise_error(IntuitRequestException, "HTTP Status 400 - message=No destination found for given partition key; errorCode=007001; statusCode=400")
+    end
+
+    it "supports making a filtered request" do
+      pending "this does the same thing as the above test!!"
+
+      xml = onlineFixture("customers.xml")
+      url = @service.url_for_resource(Quickeebooks::Online::Model::Customer.resource_for_collection)
+      stub_request(:post, url).to_return(:status => ["200", "OK"], :body => xml)
+      accounts = @service.list
+      accounts.current_page.should == 1
+      accounts.entries.count.should == 3
+      accounts.entries.first.name.should == "John Doe"
+    end
   end
 
-  it "handles 400 errors which are in the form of HTML when making a list request" do
-    xml = onlineFixture("no_destination_found.html")
-    url = @service.url_for_resource(Quickeebooks::Online::Model::Customer.resource_for_collection)
-    stub_request(:post, url).to_return(:status => ["400", "Bad Request"], :body => xml)
-    lambda { @service.list }.should \
-      raise_error(IntuitRequestException, "HTTP Status 400 - message=No destination found for given partition key; errorCode=007001; statusCode=400")
+  describe '#create' do
+    it "uses the given customer to make a create request" do
+      xml = onlineFixture("customer.xml")
+      url = @service.url_for_resource(Quickeebooks::Online::Model::Customer.resource_for_singular)
+      stub_request(:post, url).to_return(:status => ["200", "OK"], :body => xml)
+      customer = Quickeebooks::Online::Model::Customer.new
+      customer.name = "Billy Bob"
+      result = @service.create(customer)
+      result.id.value.to_i.should > 0
+    end
+
+    it "raises an InvalidModelException given an invalid customer" do
+      customer = Quickeebooks::Online::Model::Customer.new
+      lambda { @service.create(customer) }.should raise_error(InvalidModelException)
+    end
   end
 
-  it "can fetch a list of customers with filters" do
-    xml = onlineFixture("customers.xml")
-    url = @service.url_for_resource(Quickeebooks::Online::Model::Customer.resource_for_collection)
-    stub_request(:post, url).to_return(:status => ["200", "OK"], :body => xml)
-    accounts = @service.list
-    accounts.current_page.should == 1
-    accounts.entries.count.should == 3
-    accounts.entries.first.name.should == "John Doe"
-  end
+  describe '#delete' do
+    it "uses the given customer to make a delete request" do
+      url = @service.url_for_resource(Quickeebooks::Online::Model::Customer.resource_for_singular)
+      url = "#{url}/99?methodx=delete"
+      stub_request(:post, url).to_return(:status => ["200", "OK"])
+      customer = Quickeebooks::Online::Model::Customer.new
+      customer.id = Quickeebooks::Online::Model::Id.new("99")
+      customer.sync_token = 0
+      result = @service.delete(customer)
+      result.should == true
+    end
 
-  it "can create a customer" do
-    xml = onlineFixture("customer.xml")
-    url = @service.url_for_resource(Quickeebooks::Online::Model::Customer.resource_for_singular)
-    stub_request(:post, url).to_return(:status => ["200", "OK"], :body => xml)
-    customer = Quickeebooks::Online::Model::Customer.new
-    customer.name = "Billy Bob"
-    result = @service.create(customer)
-    result.id.value.to_i.should > 0
-  end
-
-  it "can delete a customer" do
-    url = @service.url_for_resource(Quickeebooks::Online::Model::Customer.resource_for_singular)
-    url = "#{url}/99?methodx=delete"
-    stub_request(:post, url).to_return(:status => ["200", "OK"])
-    customer = Quickeebooks::Online::Model::Customer.new
-    customer.id = Quickeebooks::Online::Model::Id.new("99")
-    customer.sync_token = 0
-    result = @service.delete(customer)
-    result.should == true
-  end
-
-  it "cannot delete a customer with missing required fields for deletion" do
-    customer = Quickeebooks::Online::Model::Customer.new
-    lambda { @service.delete(customer) }.should raise_error(InvalidModelException, "Missing required parameters for delete")
-  end
-
-  it "exception is raised when we try to create an invalid account" do
-    customer = Quickeebooks::Online::Model::Customer.new
-    lambda { @service.create(customer) }.should raise_error(InvalidModelException)
-  end
-
-  it "cannot update an invalid customer" do
-    customer = Quickeebooks::Online::Model::Customer.new
-    customer.name = "John Doe"
-    lambda { @service.update(customer) }.should raise_error(InvalidModelException)
+    it "raises an InvalidModelException given an invalid customer" do
+      customer = Quickeebooks::Online::Model::Customer.new
+      lambda { @service.delete(customer) }.should raise_error(InvalidModelException, "Missing required parameters for delete")
+    end
   end
 
   describe '#fetch_by_id' do
-    it "returns the customer if it can be found" do
+    it "makes a request for a single customer" do
       xml = onlineFixture("customer.xml")
       url = "#{@service.url_for_resource(Quickeebooks::Online::Model::Customer.resource_for_singular)}/99"
       stub_request(:get, url).to_return(:status => ["200", "OK"], :body => xml)
@@ -101,27 +105,34 @@ describe "Quickeebooks::Online::Service::Customer" do
     end
   end
 
-  it "can update a customer" do
-    xml2 = onlineFixture("customer2.xml")
-    customer = Quickeebooks::Online::Model::Customer.new
-    customer.name = "John Doe"
-    customer.id = Quickeebooks::Online::Model::Id.new("1")
-    customer.sync_token = 2
+  describe '#update' do
+    it "uses the given customer to make an update request" do
+      xml2 = onlineFixture("customer2.xml")
+      customer = Quickeebooks::Online::Model::Customer.new
+      customer.name = "John Doe"
+      customer.id = Quickeebooks::Online::Model::Id.new("1")
+      customer.sync_token = 2
 
-    url = "#{@service.url_for_resource(Quickeebooks::Online::Model::Customer.resource_for_singular)}/#{customer.id.value}"
-    stub_request(:post, url).to_return(:status => ["200", "OK"], :body => xml2)
-    updated = @service.update(customer)
-    updated.name.should == "Billy Bob"
+      url = "#{@service.url_for_resource(Quickeebooks::Online::Model::Customer.resource_for_singular)}/#{customer.id.value}"
+      stub_request(:post, url).to_return(:status => ["200", "OK"], :body => xml2)
+      updated = @service.update(customer)
+      updated.name.should == "Billy Bob"
+    end
+
+    it "accepts a Customer object returned by #fetch_by_id" do
+      xml = onlineFixture("customer.xml")
+      url = "#{@service.url_for_resource(Quickeebooks::Online::Model::Customer.resource_for_singular)}/99"
+      stub_request(:get, url).to_return(:status => ["200", "OK"], :body => xml)
+      customer = @service.fetch_by_id(99)
+      url = "#{@service.url_for_resource(Quickeebooks::Online::Model::Customer.resource_for_singular)}/#{customer.id.value}"
+      stub_request(:post, url).to_return(:status => ["200", "OK"], :body => xml)
+      updated = @service.update(customer)
+    end
+
+    it "raises an InvalidModelException given an invalid customer" do
+      customer = Quickeebooks::Online::Model::Customer.new
+      customer.name = "John Doe"
+      lambda { @service.update(customer) }.should raise_error(InvalidModelException)
+    end
   end
-
-  it 'Can update a fetched customer' do
-    xml = onlineFixture("customer.xml")
-    url = "#{@service.url_for_resource(Quickeebooks::Online::Model::Customer.resource_for_singular)}/99"
-    stub_request(:get, url).to_return(:status => ["200", "OK"], :body => xml)
-    customer = @service.fetch_by_id(99)
-    url = "#{@service.url_for_resource(Quickeebooks::Online::Model::Customer.resource_for_singular)}/#{customer.id.value}"
-    stub_request(:post, url).to_return(:status => ["200", "OK"], :body => xml)
-    updated = @service.update(customer)
-  end
-
 end

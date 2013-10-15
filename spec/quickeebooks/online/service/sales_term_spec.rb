@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 describe "Quickeebooks::Online::Service::SalesTerm" do
   before(:all) do
     qb_key = "key"
@@ -20,17 +22,19 @@ describe "Quickeebooks::Online::Service::SalesTerm" do
     }
   end
 
-  it "can fetch a sales term by id" do
-    xml = onlineFixture("sales_term.xml")
-    url = @service.url_for_resource(Quickeebooks::Online::Model::SalesTerm.resource_for_singular)
-    url = "#{url}/99?idDomain=QB"
-    stub_request(:get, url).to_return(:status => ["200", "OK"], :body => xml)
-    sales_term = @service.fetch_by_id(99)
+  describe '#fetch_by_id' do
+    it "makes a request for a single sales term" do
+      xml = onlineFixture("sales_term.xml")
+      url = @service.url_for_resource(Quickeebooks::Online::Model::SalesTerm.resource_for_singular)
+      url = "#{url}/99?idDomain=QB"
+      stub_request(:get, url).to_return(:status => ["200", "OK"], :body => xml)
+      sales_term = @service.fetch_by_id(99)
 
-    sales_term.id.value.should == '3'
-    sales_term.sync_token.should == 0
-    sales_term.meta_data.create_time.should == Time.parse('2013-01-17T19:04:19-08:00')
-    sales_term.meta_data.last_updated_time.should == Time.parse('2013-01-17T19:04:19-08:00')
-    sales_term.name.should == "Net 30"
+      sales_term.id.value.should == '3'
+      sales_term.sync_token.should == 0
+      sales_term.meta_data.create_time.should == Time.parse('2013-01-17T19:04:19-08:00')
+      sales_term.meta_data.last_updated_time.should == Time.parse('2013-01-17T19:04:19-08:00')
+      sales_term.name.should == "Net 30"
+    end
   end
 end

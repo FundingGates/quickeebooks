@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 describe "Quickeebooks::Windows::Service::Payment" do
   before(:all) do
     qb_key = "key"
@@ -14,26 +16,32 @@ describe "Quickeebooks::Windows::Service::Payment" do
     @oauth = OAuth::AccessToken.new(@oauth_consumer, "blah", "blah")
   end
 
-  it "can fetch a list of payments" do
-    xml = windowsFixture("payments.xml")
-    service = Quickeebooks::Windows::Service::Payment.new
-    service.access_token = @oauth
-    service.realm_id = @realm_id
+  describe '#fetch_by_id' do
+    it "makes a request for a single payment"
+  end
 
-    model = Quickeebooks::Windows::Model::Payment
-    stub_request(:post, service.url_for_resource(model::REST_RESOURCE)).
-      to_return(:status => ["200", "OK"], :body => xml)
-    payments = service.list
-    payments.entries.count.should == 1
+  describe '#list' do
+    it "can fetch a list of payments" do
+      xml = windowsFixture("payments.xml")
+      service = Quickeebooks::Windows::Service::Payment.new
+      service.access_token = @oauth
+      service.realm_id = @realm_id
 
-    payment = payments.entries.first
-    payment.id.value.should == "4"
-    payment.header.should_not be_nil
-    header = payment.header
-    header.customer_name.should == "Davis"
+      model = Quickeebooks::Windows::Model::Payment
+      stub_request(:post, service.url_for_resource(model::REST_RESOURCE)).
+        to_return(:status => ["200", "OK"], :body => xml)
+      payments = service.list
+      payments.entries.count.should == 1
 
-    line1 = payment.line_items.first
-    line1.should_not be_nil
-    line1.amount.should == header.total_amount
+      payment = payments.entries.first
+      payment.id.value.should == "4"
+      payment.header.should_not be_nil
+      header = payment.header
+      header.customer_name.should == "Davis"
+
+      line1 = payment.line_items.first
+      line1.should_not be_nil
+      line1.amount.should == header.total_amount
+    end
   end
 end

@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 describe "Quickeebooks::Online::Service::Filter" do
   before(:all) do
   end

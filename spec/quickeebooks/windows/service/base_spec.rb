@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 describe Quickeebooks::Windows::Service::Base do
   it_behaves_like 'Quickeebooks::Shared::Service::Base'
 
