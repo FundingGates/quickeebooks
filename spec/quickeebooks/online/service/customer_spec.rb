@@ -39,18 +39,6 @@ describe "Quickeebooks::Online::Service::Customer" do
       lambda { @service.list }.should \
         raise_error(IntuitRequestException, "HTTP Status 400 - message=No destination found for given partition key; errorCode=007001; statusCode=400")
     end
-
-    it "supports making a filtered request" do
-      pending "this does the same thing as the above test!!"
-
-      xml = onlineFixture("customers.xml")
-      url = @service.url_for_resource(Quickeebooks::Online::Model::Customer.resource_for_collection)
-      stub_request(:post, url).to_return(:status => ["200", "OK"], :body => xml)
-      accounts = @service.list
-      accounts.current_page.should == 1
-      accounts.entries.count.should == 3
-      accounts.entries.first.name.should == "John Doe"
-    end
   end
 
   describe '#create' do

@@ -21,15 +21,6 @@ describe "Quickeebooks::Online::Service::Account" do
     }
   end
 
-  it "receives 404 from invalid base URL" do
-    pending "this test doesn't really test anything!!"
-
-    uri = "https://qbo.intuit.com/invalid"
-    url = @service.url_for_resource(Quickeebooks::Online::Model::Account.resource_for_collection)
-    stub_request(:post, url).to_return(:status => ["200", "OK"], :body => "blah")
-    lambda { @service.list }.should raise_error(IntuitRequestException)
-  end
-
   describe '#list' do
     it "makes a request for a collection of accounts" do
       xml = File.read(File.dirname(__FILE__) + "/../../../xml/online/accounts.xml")
