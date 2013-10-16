@@ -8,20 +8,19 @@ module Quickeebooks
         end
 
         def get(url, options = {}, &block)
-          request(GetRequestPerformer)
+          request(GetRequestPerformer, &block)
         end
 
         def post(url, options = {}, &block)
-          request(PostRequestPerformer)
+          request(PostRequestPerformer, &block)
         end
 
         private
 
         def request(performer_class, &block)
           performer = performer_class.new(service, response_handler)
-          performer.call(url, options, &block).tap do |response|
-            response_handler.call(response)
-          end
+          performer.call(url, options, &block)
+          response_handler.call(response)
         end
       end
     end
