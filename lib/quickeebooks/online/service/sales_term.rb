@@ -20,10 +20,10 @@ module Quickeebooks
           xml = parse_xml(response.body)
           begin
             element = xml.at_xpath("//xmlns:#{model::XML_NODE}")
+            model.from_xml(element)
           rescue Nokogiri::XML::XPath::SyntaxError => ex
             raise IntuitRequestException.new("Error parsing XML: #{ex.message}\nHTTP Response: (#{response.code}) #{response.body}")
           end
-          model.from_xml(element)
         end
       end
     end
