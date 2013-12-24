@@ -29,9 +29,12 @@ module Quickeebooks
           #    <Object xsi:type="CreditMemo">
           xml_node = credit_memo.to_xml(:name => 'Object')
           xml_node.set_attribute('xsi:type', 'CreditMemo')
-          xml = Quickeebooks::Shared::Service::OperationNode.new.add do |content|
-            content << "<ExternalRealmId>#{self.realm_id}</ExternalRealmId>#{xml_node}"
-          end
+          xml = <<-XML
+          <Add xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" RequestId="#{guid}" xmlns="http://www.intuit.com/sb/cdm/v2">
+          <ExternalRealmId>#{self.realm_id}</ExternalRealmId>#{xml_node}
+          #{xml_node}
+          </Add>
+          XML
           perform_write(Quickeebooks::Windows::Model::CreditMemo, xml)
         end
 
@@ -54,9 +57,12 @@ module Quickeebooks
 
           xml_node = credit_memo.to_xml(:name => 'Object')
           xml_node.set_attribute('xsi:type', 'CreditMemo')
-          xml = Quickeebooks::Shared::Service::OperationNode.new.mod do |content|
-            content << "<ExternalRealmId>#{self.realm_id}</ExternalRealmId>#{xml_node}"
-          end
+          xml = <<-XML
+          <Mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" RequestId="#{guid}" xmlns="http://www.intuit.com/sb/cdm/v2">
+          <ExternalRealmId>#{self.realm_id}</ExternalRealmId>
+          #{xml_node}
+          </Mod>
+          XML
           perform_write(Quickeebooks::Windows::Model::CreditMemo, xml)
         end
 

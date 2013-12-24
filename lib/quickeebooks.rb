@@ -127,6 +127,9 @@ require 'quickeebooks/windows/model/clazz'
 require 'quickeebooks/windows/model/sales_receipt_header'
 require 'quickeebooks/windows/model/sales_receipt_line_item'
 require 'quickeebooks/windows/model/sales_receipt'
+require 'quickeebooks/windows/model/credit_memo'
+require 'quickeebooks/windows/model/credit_memo_header'
+require 'quickeebooks/windows/model/credit_memo_line_item'
 
 
 # Services
@@ -135,6 +138,7 @@ require 'quickeebooks/windows/service/sort'
 require 'quickeebooks/windows/service/service_base'
 require 'quickeebooks/windows/service/account'
 require 'quickeebooks/windows/service/customer'
+require 'quickeebooks/windows/service/credit_memo'
 require 'quickeebooks/windows/service/item'
 require 'quickeebooks/windows/service/invoice'
 require 'quickeebooks/windows/service/sales_rep'

@@ -1,18 +1,6 @@
 describe "Quickeebooks::Windows::Service::ShipMethod" do
   before(:all) do
-    FakeWeb.allow_net_connect = false
-    qb_key = "key"
-    qb_secret = "secreet"
-
-    @realm_id = "9991111222"
-    @base_uri = "https://qbo.intuit.com/qbo36"
-    @oauth_consumer = OAuth::Consumer.new(qb_key, qb_key, {
-        :site                 => "https://oauth.intuit.com",
-        :request_token_path   => "/oauth/v1/get_request_token",
-        :authorize_path       => "/oauth/v1/get_access_token",
-        :access_token_path    => "/oauth/v1/get_access_token"
-    })
-    @oauth = OAuth::AccessToken.new(@oauth_consumer, "blah", "blah")
+    construct_oauth
   end
 
   it "can fetch a list of shipping methods" do

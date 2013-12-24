@@ -45,4 +45,5 @@ def windowsFixture(file)
   File.new(fixture_path + '/windows/' + file).read
 end
 
-Dir[ File.expand_path('../shared/*.rb', __FILE__) ].each { |fn| require fn }
+Dir[File.expand_path('../shared/*.rb', __FILE__) ].each { |f| require f }
+Dir[File.expand_path('../support/**/*.rb', __FILE__)].each { |f| require f }
