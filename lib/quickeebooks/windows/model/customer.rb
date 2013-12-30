@@ -1,4 +1,5 @@
 require "quickeebooks"
+require 'quickeebooks/windows/model/external_key'
 require "quickeebooks/windows/model/meta_data"
 require "quickeebooks/windows/model/address"
 require "quickeebooks/windows/model/phone"
@@ -27,7 +28,7 @@ module Quickeebooks
         xml_accessor :synchronized, :from => 'Synchronized'
         xml_accessor :meta_data, :from => 'MetaData', :as => Quickeebooks::Windows::Model::MetaData
         xml_accessor :custom_fields, :from => 'CustomField', :as => [Quickeebooks::Windows::Model::CustomField]
-        xml_accessor :external_key, :from => 'ExternalKey'
+        xml_accessor :external_key, :from => 'ExternalKey', :as => Quickeebooks::Windows::Model::ExternalKey
         xml_accessor :draft
         xml_accessor :object_state, :from => 'ObjectState'
         xml_accessor :party_reference_id, :from => 'PartyReferenceId'

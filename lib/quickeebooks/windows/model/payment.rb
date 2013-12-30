@@ -1,4 +1,5 @@
 require 'quickeebooks/windows/model/payment_header'
+require 'quickeebooks/windows/model/external_key'
 require 'quickeebooks/windows/model/payment_line_item'
 require 'quickeebooks/windows/model/payment_detail'
 require 'quickeebooks/windows/model/credit_card'
