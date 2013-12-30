@@ -17,11 +17,12 @@ module Quickeebooks
         REST_RESOURCE = "payment"
 
         xml_convention :camelcase
-        xml_accessor :id,         :from => 'Id',        :as => Quickeebooks::Windows::Model::Id
-        xml_accessor :sync_token, :from => 'SyncToken', :as => Integer
-        xml_accessor :meta_data,  :from => 'MetaData',  :as => Quickeebooks::Windows::Model::MetaData
-        xml_accessor :header,     :from => 'Header',    :as => Quickeebooks::Windows::Model::PaymentHeader
-        xml_accessor :line_items, :from => 'Line',      :as => [Quickeebooks::Windows::Model::PaymentLineItem]
+        xml_accessor :id,           :from => 'Id',        :as => Quickeebooks::Windows::Model::Id
+        xml_accessor :sync_token,   :from => 'SyncToken', :as => Integer
+        xml_accessor :meta_data,    :from => 'MetaData',  :as => Quickeebooks::Windows::Model::MetaData
+        xml_accessor :external_key, :from => 'ExternalKey'
+        xml_accessor :header,       :from => 'Header',    :as => Quickeebooks::Windows::Model::PaymentHeader
+        xml_accessor :line_items,   :from => 'Line',      :as => [Quickeebooks::Windows::Model::PaymentLineItem]
 
         def initialize
           ensure_line_items_initialization

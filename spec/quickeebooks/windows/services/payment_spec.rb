@@ -23,6 +23,8 @@ describe "Quickeebooks::Windows::Service::Payment" do
     header = payment.header
     header.customer_name.should == "Davis"
 
+    payment.external_key.should == "4"
+
     line1 = payment.line_items.first
     line1.should_not be_nil
     line1.amount.should == header.total_amount
