@@ -11,6 +11,7 @@ module Quickeebooks
         xml_accessor :doc_number, :from => 'DocNumber'
         xml_accessor :txn_date, :from => 'TxnDate', :as => Time
         xml_accessor :msg, :from => 'Msg'
+        xml_accessor :note, :from => 'Note'
         xml_accessor :customer_id, :from => 'CustomerId', :as => Quickeebooks::Online::Model::Id
         xml_accessor :customer_name, :from => 'CustomerName'
         xml_accessor :sales_tax_code_id, :from => 'SalesTaxCodeId', :as => Quickeebooks::Online::Model::Id
