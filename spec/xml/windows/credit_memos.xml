@@ -46,7 +46,7 @@
 					<Tag>Shipping</Tag>
 				</ShipAddr>
 				<BillEmail>thorn@zanottos.com</BillEmail>
-				<Balance>384.48</Balance>
+				<RemainingCredit>384.48</RemainingCredit>
 			</Header>
 			<Line>
 				<Id idDomain="QB">21</Id>
@@ -108,7 +108,7 @@
 					<Default>false</Default>
 					<Tag>Shipping</Tag>
 				</ShipAddr>
-				<Balance>384.48</Balance>
+				<RemainingCredit>384.48</RemainingCredit>
 			</Header>
 			<Line>
 				<Id idDomain="QB">18</Id>
@@ -170,7 +170,7 @@
 					<Default>false</Default>
 					<Tag>Shipping</Tag>
 				</ShipAddr>
-				<Balance>384.48</Balance>
+				<RemainingCredit>384.48</RemainingCredit>
 			</Header>
 			<Line>
 				<Id idDomain="QB">15</Id>
@@ -232,7 +232,7 @@
 					<Default>false</Default>
 					<Tag>Shipping</Tag>
 				</ShipAddr>
-				<Balance>384.48</Balance>
+				<RemainingCredit>384.48</RemainingCredit>
 			</Header>
 			<Line>
 				<Id idDomain="QB">12</Id>
@@ -294,7 +294,7 @@
 					<Default>false</Default>
 					<Tag>Shipping</Tag>
 				</ShipAddr>
-				<Balance>384.48</Balance>
+				<RemainingCredit>384.48</RemainingCredit>
 			</Header>
 			<Line>
 				<Id idDomain="QB">9</Id>
@@ -356,7 +356,7 @@
 					<Default>false</Default>
 					<Tag>Shipping</Tag>
 				</ShipAddr>
-				<Balance>384.48</Balance>
+				<RemainingCredit>384.48</RemainingCredit>
 			</Header>
 			<Line>
 				<Id idDomain="QB">6</Id>
@@ -417,7 +417,7 @@
 					<Default>false</Default>
 					<Tag>Shipping</Tag>
 				</ShipAddr>
-				<Balance>384.48</Balance>
+				<RemainingCredit>384.48</RemainingCredit>
 			</Header>
 			<Line>
 				<Id idDomain="QB">3</Id>

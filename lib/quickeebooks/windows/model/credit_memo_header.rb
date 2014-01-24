@@ -49,7 +49,7 @@ module Quickeebooks
         xml_accessor :bill_email, :from => 'BillEmail'
         xml_accessor :ship_method_id, :from => 'ShipMethodId', :as => Quickeebooks::Windows::Model::Id
         xml_accessor :ship_method_name, :from => 'ShipMethodName'
-        xml_accessor :remaining_credit, :from => 'Balance', :as => Float
+        xml_accessor :remaining_credit, :from => 'RemainingCredit', :as => Float
         xml_accessor :detail, :from => 'Detail', :as => Quickeebooks::Windows::Model::PaymentDetail
         xml_accessor :discount_amount, :from => 'DiscountAmt', :as => Float
         xml_accessor :discount_rate, :from => 'DiscountRate', :as => Float
