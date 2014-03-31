@@ -6,9 +6,14 @@ module Quickeebooks
   module Online
     module Service
       class SalesTerm < ServiceBase
+
         def fetch_by_id(id, idDomain = 'QB', options = {})
           url = "#{url_for_resource(Quickeebooks::Online::Model::SalesTerm::REST_RESOURCE)}/#{id}"
           fetch_object(Quickeebooks::Online::Model::SalesTerm, url, { :idDomain => idDomain })
+        end
+
+        def list(filters = [], page = 1, per_page = 20, sort = nil, options = {})
+          fetch_collection(Quickeebooks::Online::Model::SalesTerm, filters, page, per_page, sort, options)
         end
 
         private
