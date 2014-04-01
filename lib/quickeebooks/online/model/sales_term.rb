@@ -17,6 +17,11 @@ module Quickeebooks
         xml_accessor :sync_token, :from => 'SyncToken', :as => Integer
         xml_accessor :meta_data,  :from => 'MetaData',  :as => Quickeebooks::Online::Model::MetaData
         xml_accessor :name,       :from => 'Name'
+
+        def self.resource_for_collection
+          "#{self::REST_RESOURCE}s"
+        end
+
       end
     end
   end

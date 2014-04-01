@@ -16,10 +16,6 @@ module Quickeebooks
           fetch_collection(Quickeebooks::Online::Model::SalesTerm, filters, page, per_page, sort, options)
         end
 
-        def self.resource_for_collection
-          "#{self::REST_RESOURCE}s"
-        end
-
         private
 
         def fetch_object(model, url, params = {}, options = {})
