@@ -25,6 +25,11 @@ module Quickeebooks
           perform_write(Quickeebooks::Windows::Model::Item, xml)
         end
 
+        def fetch_by_id(id, idDomain = 'QB', options = {})
+          url = "#{url_for_resource(Quickeebooks::Windows::Model::Item::REST_RESOURCE)}/#{id}"
+          fetch_object(Quickeebooks::Windows::Model::Item, url, { :idDomain => idDomain })
+        end
+
       end
     end
 

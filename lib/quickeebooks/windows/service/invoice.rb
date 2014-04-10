@@ -39,6 +39,11 @@ module Quickeebooks
           perform_write(Quickeebooks::Windows::Model::Invoice, xml)
         end
 
+        def fetch_by_id(id, idDomain = 'QB', options = {})
+          url = "#{url_for_resource(Quickeebooks::Windows::Model::Invoice::REST_RESOURCE)}/#{id}"
+          fetch_object(Quickeebooks::Windows::Model::Invoice, url, { :idDomain => idDomain })
+        end
+
       end
     end
   end
