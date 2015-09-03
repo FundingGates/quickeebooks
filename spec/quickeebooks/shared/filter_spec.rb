@@ -131,7 +131,7 @@ describe "Quickeebooks::Shared::Service::Filter" do
       it 'CGI escapes values' do
         filter.new(:text,
           :field => 'Foo',
-          :value => "<3 Bar's ><things").to_xml.should == '<Foo>&lt;3 Bar\'s &gt;&lt;things</Foo>'
+          :value => "<3 Bar's ><things").to_xml.should == '<Foo>&lt;3 Bar#039;s &gt;&lt;things</Foo>'
       end
 
       it 'CGI escapes integers' do
